@@ -16,6 +16,8 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.annotation.RequiresApi;
 
 
+import com.alibaba.fastjson.JSON;
+import com.lqcode.adjump.entity.Result;
 import com.lqcode.adjump.entity.db.DBAutoJumpConfig;
 import com.lqcode.adjump.event.LayoutMessage;
 import com.lqcode.adjump.event.RemoveLayoutMessage;
@@ -28,8 +30,14 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * @功能:
@@ -182,13 +190,13 @@ public class SkipService extends AccessibilityService {
                 String ids = CacheTools.getInstance().getApps().get(key);
                 if (ids == null) return;
                 if (ids.length() == 0) return;
-                skip(ids, nodeInfo);
+                skip(ids, nodeInfo,event.getClassName().toString());
             }
 
             if (isDebug) {
                 AccessibilityNodeInfo nodeInfo = event.getSource();
                 if (nodeInfo == null) return;
-                findJumpText(nodeInfo);
+                findJumpText(nodeInfo, event.getClassName().toString());
             }
         }
     }
@@ -196,12 +204,12 @@ public class SkipService extends AccessibilityService {
     /**
      * @param nodeInfo
      */
-    private void findJumpText(final AccessibilityNodeInfo nodeInfo) {
+    private void findJumpText(final AccessibilityNodeInfo nodeInfo, String className) {
         List<AccessibilityNodeInfo> accessibilityNodeInfoList = nodeInfo.findAccessibilityNodeInfosByText("跳过");
         if (accessibilityNodeInfoList.size() <= 0) {
             new Handler().postDelayed(() -> {
                 if (count <= 80) {
-                    findJumpText(nodeInfo);
+                    findJumpText(nodeInfo, className);
                     count++;
                 } else {
                     count = 0;
@@ -214,7 +222,7 @@ public class SkipService extends AccessibilityService {
             Log.e(TAG, "find text it!id is text ===>>" + text);
             if (text.length() <= 5) {
                 skipClick(accessibilityNodeInfoList);
-                addAutoJumpDB(findNodeInfo);
+                addAutoJumpDB(findNodeInfo, className);
             }
             count = 0;
         }
@@ -223,21 +231,45 @@ public class SkipService extends AccessibilityService {
     /**
      *
      */
-    private void addAutoJumpDB(AccessibilityNodeInfo findNodeInfo) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String packageActivity = findNodeInfo.getPackageName() + "-" + findNodeInfo.getClassName();
-                List<DBAutoJumpConfig> dbAutoJumpConfigList = XController.getInstance().getDb().autoJumpConfigDao().getByPackageActivity(packageActivity);
-                if (dbAutoJumpConfigList.size() <= 0) {
-                    DBAutoJumpConfig dbAutoJumpConfig = new DBAutoJumpConfig();
-                    dbAutoJumpConfig.setPackageActivity(packageActivity);
-                    dbAutoJumpConfig.setButtonName(findNodeInfo.getViewIdResourceName() == null ? "-1" : findNodeInfo.getViewIdResourceName());
-                    XController.getInstance().getDb().autoJumpConfigDao().addAutoJumpConfig(dbAutoJumpConfig);
-                }
+    private void addAutoJumpDB(AccessibilityNodeInfo findNodeInfo, String className) {
+        new Thread(() -> {
+            String packageActivity = findNodeInfo.getPackageName() + "-" + className;
+            List<DBAutoJumpConfig> dbAutoJumpConfigList = XController.getInstance().getDb().autoJumpConfigDao().getByPackageActivity(packageActivity);
+            if (dbAutoJumpConfigList.size() <= 0) {
+                DBAutoJumpConfig dbAutoJumpConfig = new DBAutoJumpConfig();
+                dbAutoJumpConfig.setPackageActivity(packageActivity);
+                dbAutoJumpConfig.setButtonName(findNodeInfo.getViewIdResourceName() == null ? "-1" : findNodeInfo.getViewIdResourceName());
+                XController.getInstance().getDb().autoJumpConfigDao().addAutoJumpConfig(dbAutoJumpConfig);
+                uploadCustomAutoJumpAppConfig();
             }
         }).start();
     }
+
+    /**
+     *
+     */
+    private void uploadCustomAutoJumpAppConfig() {
+        int count = XController.getInstance().getDb().autoJumpConfigDao().getCount();
+        if (count >= 1) {
+            List<DBAutoJumpConfig> dbAutoJumpConfigList =
+                    XController.getInstance().getDb().autoJumpConfigDao().getAll();
+            RequestBody body = RequestBody.create(JSON.toJSONString(dbAutoJumpConfigList), MediaType.parse("application/json; charset=utf-8"));
+            Request request = new Request.Builder()
+                    .url("http://api.lqcode.cn/autoSkip/upload")
+                    .post(body)
+                    .build();
+            try {
+                Response response = CacheTools.getInstance().getClient().newCall(request).execute();
+                Result result = JSON.parseObject(response.body().string(), Result.class);
+                if (result.getStatus() == 200) {
+                    XController.getInstance().getDb().autoJumpConfigDao().delAll();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     int count = 1;
 
@@ -259,11 +291,11 @@ public class SkipService extends AccessibilityService {
         }
     }
 
-    private void skip(String ids, AccessibilityNodeInfo nodeInfo) {
+    private void skip(String ids, AccessibilityNodeInfo nodeInfo, String className) {
         for (String id : ids.split(",")) {
             Log.d(TAG, "skip: 查找id为：" + id);
             if (id.equals("-1"))
-                findJumpText(nodeInfo);
+                findJumpText(nodeInfo, className);
             else
                 findNodeInfoViewById(nodeInfo, id);
         }

@@ -24,4 +24,9 @@ public interface DBAutoJumpConfigDao {
     @Query("select * from DBAutoJumpConfig where packageActivity ==:packageActivity")
     List<DBAutoJumpConfig> getByPackageActivity(String packageActivity);
 
+
+    @Query("select count(*) from DBAutoJumpConfig")
+    int getCount();
+
+
 }

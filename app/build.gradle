@@ -46,4 +46,6 @@ dependencies {
     implementation "com.umeng.umsdk:asms:1.1.3" // asms包依赖(必选)
     implementation "com.umeng.umsdk:crash:0.0.4" // native crash包依赖(必选)
 
+
+
 }

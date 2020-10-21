@@ -1,10 +1,12 @@
 package com.lqcode.adjump;
 
 import android.os.Bundle;
+import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.alibaba.fastjson.JSON;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.lqcode.adjump.entity.NetApps;
 import com.lqcode.adjump.entity.Result;
 import com.lqcode.adjump.entity.db.DBAppConfig;
@@ -12,27 +14,17 @@ import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
 import com.lqcode.adjump.tools.ValueTools;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.util.Log;
-import android.view.View;
-
-import android.view.Menu;
-import android.view.MenuItem;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private OkHttpClient client = new OkHttpClient();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 Request requestMd5 = new Request.Builder()
                         .url("http://api.lqcode.cn/autoSkip/md5")
                         .build();
-                Response responseMd5 = client.newCall(requestMd5).execute();
+                Response responseMd5 = CacheTools.getInstance().getClient().newCall(requestMd5).execute();
                 String bodyMd5 = responseMd5.body().string();
                 Result resultMd5 = JSON.parseObject(bodyMd5, Result.class);
                 String md5 = ValueTools.build().getString("appConfigMd5");
@@ -80,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 Request request = new Request.Builder()
                         .url("http://api.lqcode.cn/autoSkip/test")
                         .build();
-                Response response = client.newCall(request).execute();
+                Response response = CacheTools.getInstance().getClient().newCall(request).execute();
                 String result = response.body().string();
                 NetApps app = JSON.parseObject(result, NetApps.class);
                 XController.getInstance().getDb().appConfigDao().delAll();

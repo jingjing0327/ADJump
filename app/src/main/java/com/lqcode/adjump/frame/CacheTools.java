@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 
 import java.util.Map;
 
+import okhttp3.OkHttpClient;
+
 public class CacheTools {
     private static CacheTools cacheTools;
     private String TAG = this.getClass().getSimpleName();
@@ -21,7 +23,17 @@ public class CacheTools {
     private boolean isStartScreen;
     private Map<String, String> apps;
     private Context context;
+    private OkHttpClient client;
 
+    public OkHttpClient getClient() {
+        if (client == null)
+            client = new OkHttpClient();
+        return client;
+    }
+
+    public void setClient(OkHttpClient client) {
+        this.client = client;
+    }
 
     public Context getContext() {
         return context;
