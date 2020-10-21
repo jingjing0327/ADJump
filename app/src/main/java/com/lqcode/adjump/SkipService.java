@@ -190,7 +190,7 @@ public class SkipService extends AccessibilityService {
                 String ids = CacheTools.getInstance().getApps().get(key);
                 if (ids == null) return;
                 if (ids.length() == 0) return;
-                skip(ids, nodeInfo,event.getClassName().toString());
+                skip(ids, nodeInfo, event.getClassName().toString());
             }
 
             if (isDebug) {
@@ -220,7 +220,7 @@ public class SkipService extends AccessibilityService {
             Log.e(TAG, "find text it!id is ===>>" + findNodeInfo.getViewIdResourceName());
             CharSequence text = findNodeInfo.getText();
             Log.e(TAG, "find text it!id is text ===>>" + text);
-            if (text.length() <= 5) {
+            if (text.length() <= 10) {
                 skipClick(accessibilityNodeInfoList);
                 addAutoJumpDB(findNodeInfo, className);
             }
@@ -307,7 +307,8 @@ public class SkipService extends AccessibilityService {
         Rect rect = new Rect();
         nodeInfoList.get(0).getBoundsInScreen(rect);
 //        Toast.makeText(getApplicationContext(), "跳过广告", Toast.LENGTH_SHORT).show();
-        XController.getInstance().toastShow("跳过广告");
+        if (ValueTools.build().getInt("jump_toast_switch") <= 0)
+            XController.getInstance().toastShow("跳过广告");
         ValueTools.build().putInt("jumpCount", ValueTools.build().getInt("jumpCount") + 1);
 //        dispatchGesture(new GestureDescription())
         if (!isClick) {
