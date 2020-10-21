@@ -224,16 +224,20 @@ public class SkipService extends AccessibilityService {
      *
      */
     private void addAutoJumpDB(AccessibilityNodeInfo findNodeInfo) {
-        String packageActivity = findNodeInfo.getPackageName() + "-" + findNodeInfo.getClassName();
-        List<DBAutoJumpConfig> dbAutoJumpConfigList = XController.getInstance().getDb().autoJumpConfigDao().getByPackageActivity(packageActivity);
-        if (dbAutoJumpConfigList.size() <= 0) {
-            DBAutoJumpConfig dbAutoJumpConfig = new DBAutoJumpConfig();
-            dbAutoJumpConfig.setPackageActivity(packageActivity);
-            dbAutoJumpConfig.setButtonName(findNodeInfo.getViewIdResourceName() == null ? "-1" : findNodeInfo.getViewIdResourceName());
-            XController.getInstance().getDb().autoJumpConfigDao().addAutoJumpConfig(dbAutoJumpConfig);
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String packageActivity = findNodeInfo.getPackageName() + "-" + findNodeInfo.getClassName();
+                List<DBAutoJumpConfig> dbAutoJumpConfigList = XController.getInstance().getDb().autoJumpConfigDao().getByPackageActivity(packageActivity);
+                if (dbAutoJumpConfigList.size() <= 0) {
+                    DBAutoJumpConfig dbAutoJumpConfig = new DBAutoJumpConfig();
+                    dbAutoJumpConfig.setPackageActivity(packageActivity);
+                    dbAutoJumpConfig.setButtonName(findNodeInfo.getViewIdResourceName() == null ? "-1" : findNodeInfo.getViewIdResourceName());
+                    XController.getInstance().getDb().autoJumpConfigDao().addAutoJumpConfig(dbAutoJumpConfig);
+                }
+            }
+        }).start();
     }
-
 
     int count = 1;
 

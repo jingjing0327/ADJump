@@ -15,29 +15,15 @@ import android.widget.TextView;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
-import com.alibaba.fastjson.JSON;
-import com.lqcode.adjump.entity.NetApps;
-import com.lqcode.adjump.entity.db.DBAppConfig;
-import com.lqcode.adjump.entity.Result;
-import com.lqcode.adjump.frame.CacheTools;
-import com.lqcode.adjump.frame.XController;
 import com.lqcode.adjump.tools.ValueTools;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class FirstFragment extends Fragment {
     private static final String TAG = FirstFragment.class.getSimpleName();
     private Intent intent;
-    SwitchCompat serviceSwitch;
-    TextView serviceText;
-    TextView jumpCount;
-    OkHttpClient client = new OkHttpClient();
+    private SwitchCompat serviceSwitch;
+    private TextView serviceText;
+    private TextView jumpCount;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,62 +51,10 @@ public class FirstFragment extends Fragment {
         serviceText.setText(serviceSwitch.isChecked() ? "服务正在运行" : "服务未开启，点击开启服务");
         jumpCount = rootView.findViewById(R.id.jump_count);
         rootView.findViewById(R.id.setting_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), SettingActivity.class)));
-        setCacheAppsConfig();
-        getNewApps();
+
         return rootView;
     }
 
-    /**
-     *
-     */
-    private void setCacheAppsConfig() {
-        new Thread(() -> {
-            List<DBAppConfig> dbAppConfigList = XController.getInstance().getDb().appConfigDao().getAll();
-            Map<String, String> map = new HashMap<>();
-            for (DBAppConfig config : dbAppConfigList) {
-                map.put(config.getPackageActivity(), config.getButtonName());
-            }
-            CacheTools.getInstance().setApps(map);
-            Log.d(TAG, "setCacheAppsConfig: " + CacheTools.getInstance().getApps().toString());
-        }).start();
-    }
-
-    /**
-     *
-     */
-    private void getNewApps() {
-        new Thread(() -> {
-            try {
-                Request requestMd5 = new Request.Builder()
-                        .url("http://api.lqcode.cn/autoSkip/md5")
-                        .build();
-                Response responseMd5 = client.newCall(requestMd5).execute();
-                String bodyMd5 = responseMd5.body().string();
-                Result resultMd5 = JSON.parseObject(bodyMd5, Result.class);
-                String md5 = ValueTools.build().getString("appConfigMd5");
-                if (md5 != null) if (md5.equals(resultMd5.getData().toString())) return;
-                Request request = new Request.Builder()
-                        .url("http://api.lqcode.cn/autoSkip/test")
-                        .build();
-                Response response = client.newCall(request).execute();
-                String result = response.body().string();
-                NetApps app = JSON.parseObject(result, NetApps.class);
-                XController.getInstance().getDb().appConfigDao().delAll();
-                for (String key : app.getData().keySet()) {
-                    String value = app.getData().get(key);
-                    DBAppConfig appConfig = new DBAppConfig();
-                    appConfig.setButtonName(value);
-                    appConfig.setPackageActivity(key);
-                    XController.getInstance().getDb().appConfigDao().addAppConfig(appConfig);
-                }
-                Log.d(TAG, "getApps: " + XController.getInstance().getDb().appConfigDao().getAll());
-                CacheTools.getInstance().setApps(app.getData());
-                ValueTools.build().putString("appConfigMd5", resultMd5.getData().toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-    }
 
     @Override
     public void onResume() {
