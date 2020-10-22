@@ -16,7 +16,6 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.lqcode.adjump.tools.ValueTools;
-import com.tencent.bugly.beta.Beta;
 
 public class FirstFragment extends Fragment {
     private static final String TAG = FirstFragment.class.getSimpleName();
@@ -53,14 +52,8 @@ public class FirstFragment extends Fragment {
         jumpCount = rootView.findViewById(R.id.jump_count);
         rootView.findViewById(R.id.setting_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), SettingActivity.class)));
         rootView.findViewById(R.id.about_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), AboutActivity.class)));
-        rootView.findViewById(R.id.test_tv).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), TestActivity.class));
-//                Beta.checkUpgrade();
-            }
-        });
-
+        rootView.findViewById(R.id.test_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), TestActivity.class)));
+        rootView.findViewById(R.id.custom_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), CustomActivity.class)));
 
         return rootView;
     }

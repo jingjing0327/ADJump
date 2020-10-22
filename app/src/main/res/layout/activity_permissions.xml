@@ -5,87 +5,95 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView2"
+
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:src="@mipmap/ic_launcher"
+        android:layout_marginTop="16dp"
+        android:text="必要权限"
+        android:textColor="#E60404"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tip"
+
+    <RelativeLayout
+        android:id="@+id/float_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:text="完美自动跳过广告"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
-
-    <RelativeLayout
-        android:id="@+id/version_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
         android:background="@android:color/white"
         android:gravity="center_vertical"
         android:padding="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tip">
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
 
         <TextView
-            android:id="@+id/version"
+            android:id="@+id/float_tip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="检查版本号"
+            android:text="开启悬浮窗权限"
             android:textColor="#000000"
             android:textSize="16sp" />
 
-        <ImageView
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/float_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:src="@mipmap/back" />
-
-
+            android:layout_centerVertical="true"
+            android:checked="false"
+            android:text="关" />
     </RelativeLayout>
 
-
     <RelativeLayout
-        android:id="@+id/contact_layout"
+        android:id="@+id/help_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@android:color/white"
         android:gravity="center_vertical"
         android:padding="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/version_layout">
+        app:layout_constraintTop_toBottomOf="@+id/float_layout">
+
 
         <TextView
-            android:id="@+id/contact"
+            android:id="@+id/help_tip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="点击加作者QQ好友"
+            android:text="开启辅助服务 跳过广告"
             android:textColor="#000000"
             android:textSize="16sp" />
 
-        <ImageView
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/help_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:src="@mipmap/back" />
-
+            android:layout_centerVertical="true"
+            android:checked="false"
+            android:text="关" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="后台常驻权限"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/help_layout" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

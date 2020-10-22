@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name=".MyApplication"
@@ -42,8 +43,7 @@
         </service>
 
         <activity
-            android:name=".FloatingActivity"
-            android:launchMode="singleInstance" />
+            android:name=".CustomActivity"/>
         <activity
             android:name=".SettingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -52,7 +52,6 @@
 
         <activity android:name=".TestActivity" />
         <activity android:name=".AboutActivity" />
-
 
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
