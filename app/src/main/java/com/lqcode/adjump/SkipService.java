@@ -221,8 +221,11 @@ public class SkipService extends AccessibilityService {
             CharSequence text = findNodeInfo.getText();
             Log.e(TAG, "find text it!id is text ===>>" + text);
             if (text.length() <= 10) {
-                skipClick(accessibilityNodeInfoList);
-                addAutoJumpDB(findNodeInfo, className);
+                String[] texts = text.toString().split("");
+                if (texts[0].equals("跳")) {
+                    skipClick(accessibilityNodeInfoList);
+                    addAutoJumpDB(findNodeInfo, className);
+                }
             }
             count = 0;
         }

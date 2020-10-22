@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import androidx.room.Room;
 
-import com.lqcode.adjump.entity.AppDatabase;
+import com.lqcode.adjump.entity.db.AppDatabase;
 
 public class XController {
 
