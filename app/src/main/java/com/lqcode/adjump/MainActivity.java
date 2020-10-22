@@ -12,6 +12,7 @@ import com.lqcode.adjump.entity.Result;
 import com.lqcode.adjump.entity.db.DBAppConfig;
 import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
+import com.lqcode.adjump.tools.Tools;
 import com.lqcode.adjump.tools.ValueTools;
 
 import java.util.HashMap;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         setCacheAppsConfig();
         getNewApps();
+        Tools.getDeviceId();
     }
 
 
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 Request requestMd5 = new Request.Builder()
-                        .url("http://api.lqcode.cn/autoSkip/md5")
+                        .url("https://api.lqcode.cn/autoSkip/md5")
                         .build();
                 Response responseMd5 = CacheTools.getInstance().getClient().newCall(requestMd5).execute();
                 String bodyMd5 = responseMd5.body().string();
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 String md5 = ValueTools.build().getString("appConfigMd5");
                 if (md5 != null) if (md5.equals(resultMd5.getData().toString())) return;
                 Request request = new Request.Builder()
-                        .url("http://api.lqcode.cn/autoSkip/test")
+                        .url("https://api.lqcode.cn/autoSkip/get")
                         .build();
                 Response response = CacheTools.getInstance().getClient().newCall(request).execute();
                 String result = response.body().string();

@@ -1,6 +1,7 @@
 package com.lqcode.adjump;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import com.lqcode.adjump.frame.CacheTools;
+import com.lqcode.adjump.tools.Tools;
 import com.lqcode.adjump.tools.ValueTools;
 
 
@@ -32,5 +34,8 @@ public class SettingActivity extends AppCompatActivity {
         weixinAutoLoginSwitch.setChecked(ValueTools.build().getInt("weixin_auto_login_switch") > 0);
         jumpToastSwitch.setOnCheckedChangeListener((compoundButton, b) -> ValueTools.build().putInt("jump_toast_switch", b ? 1 : 0));
         weixinAutoLoginSwitch.setOnCheckedChangeListener((compoundButton, b) -> ValueTools.build().putInt("weixin_auto_login_switch", b ? 1 : 0));
+
+
+        ((TextView) findViewById(R.id.device_id_tv)).setText("设备编码：\n" + Tools.getDeviceId());
     }
 }

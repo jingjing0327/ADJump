@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,20 +21,30 @@
 
     <RelativeLayout
         android:id="@+id/toast_layout"
-        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/app_bar_layout"
+        android:layout_marginTop="10dp"
         android:background="@android:color/white"
         android:gravity="center_vertical"
         android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/vip"
+            android:layout_width="45dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/vip" />
 
         <TextView
             android:id="@+id/jump_toast_tip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/vip"
             android:text="隐藏“跳过广告”提示"
             android:textColor="#000000"
+
             android:textSize="16sp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -43,6 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:checked="true"
             android:text="开" />
     </RelativeLayout>
@@ -56,10 +66,19 @@
         android:gravity="center_vertical"
         android:padding="15dp">
 
+        <ImageView
+            android:id="@+id/vip_002"
+            android:layout_width="45dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/vip" />
+
         <TextView
             android:id="@+id/weixin_auto_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/vip_002"
             android:text="微信自动登录"
             android:textColor="#000000"
             android:textSize="16sp" />
@@ -69,7 +88,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:checked="true"
             android:text="开" />
     </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/device_id_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:text="唯一编码"
+        android:textColor="#BCBCBC"
+        android:textSize="12sp" />
+
+
 </RelativeLayout>

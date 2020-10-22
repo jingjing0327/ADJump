@@ -52,6 +52,14 @@ public class FirstFragment extends Fragment {
         jumpCount = rootView.findViewById(R.id.jump_count);
         rootView.findViewById(R.id.setting_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), SettingActivity.class)));
 
+        rootView.findViewById(R.id.test_tv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), TestActivity.class));
+            }
+        });
+
+
         return rootView;
     }
 

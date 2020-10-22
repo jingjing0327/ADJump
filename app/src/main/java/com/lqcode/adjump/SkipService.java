@@ -255,7 +255,7 @@ public class SkipService extends AccessibilityService {
                     XController.getInstance().getDb().autoJumpConfigDao().getAll();
             RequestBody body = RequestBody.create(JSON.toJSONString(dbAutoJumpConfigList), MediaType.parse("application/json; charset=utf-8"));
             Request request = new Request.Builder()
-                    .url("http://api.lqcode.cn/autoSkip/upload")
+                    .url("https://api.lqcode.cn/autoSkip/upload")
                     .post(body)
                     .build();
             try {
@@ -320,7 +320,7 @@ public class SkipService extends AccessibilityService {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void onTouch(Rect rect) {
         Log.d(TAG, "====onTouch====");
-        Boolean b = dispatchGesture(createClick(rect.left + 1, rect.top + 1), new GestureResultCallback() {
+        Boolean b = dispatchGesture(createClick(rect.left, rect.top), new GestureResultCallback() {
             @Override
             public void onCancelled(GestureDescription gestureDescription) {
                 super.onCancelled(gestureDescription);
