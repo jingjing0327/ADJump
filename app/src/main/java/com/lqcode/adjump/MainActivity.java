@@ -1,5 +1,12 @@
 package com.lqcode.adjump;
 
+import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
+import android.hardware.display.DisplayManager;
+import android.media.Image;
+import android.media.ImageReader;
+import android.media.projection.MediaProjection;
+import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -10,11 +17,18 @@ import com.alibaba.fastjson.JSON;
 import com.lqcode.adjump.entity.NetApps;
 import com.lqcode.adjump.entity.Result;
 import com.lqcode.adjump.entity.db.DBAppConfig;
+import com.lqcode.adjump.event.LayoutMessage;
+import com.lqcode.adjump.event.ScreenMessage;
 import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
 import com.lqcode.adjump.tools.Tools;
 import com.lqcode.adjump.tools.ValueTools;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         setCacheAppsConfig();
         getNewApps();
         Tools.getDeviceId();
+
     }
 
 
@@ -94,7 +109,10 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-//    @Override
+
+
+
+    //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
 //        getMenuInflater().inflate(R.menu.menu_main, menu);

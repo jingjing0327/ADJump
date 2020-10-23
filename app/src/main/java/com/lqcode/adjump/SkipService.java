@@ -62,6 +62,7 @@ public class SkipService extends AccessibilityService {
             add("android.widget.TextView");
             add("android.widget.ConstraintLayout");
             add("android.widget.ImageView");
+            add("android.widget.button");
         }
     };
 

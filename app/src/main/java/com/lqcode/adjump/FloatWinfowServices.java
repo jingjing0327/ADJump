@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -59,6 +60,7 @@ public class FloatWinfowServices extends Service {
      * 悬浮窗点击事件
      */
     private void initFloating() {
+
         linearLayout = mFloatingLayout.findViewById(R.id.line1);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +164,6 @@ public class FloatWinfowServices extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        winManager.removeView(mFloatingLayout);
+//        winManager.removeView(mFloatingLayout);
     }
 }

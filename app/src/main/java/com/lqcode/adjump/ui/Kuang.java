@@ -34,6 +34,7 @@ public class Kuang extends RelativeLayout {
     private Canvas mBitmapCanvas = null;
     private Paint mPaint = null;
 
+
     public Kuang(Context context, List<Rect> rectList) {
         super(context);
         this.context = context;
@@ -100,7 +101,6 @@ public class Kuang extends RelativeLayout {
 //            mBitmapCanvas.drawRect(lastRect, clearPaint);
 //
 //            invalidate();
-
 
 
             //
