@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -207,22 +208,27 @@ public class SkipService extends AccessibilityService {
     private void findJumpText(final AccessibilityNodeInfo nodeInfo, String className) {
         List<AccessibilityNodeInfo> accessibilityNodeInfoList = nodeInfo.findAccessibilityNodeInfosByText("跳过");
         if (accessibilityNodeInfoList.size() <= 0) {
-            new Handler().postDelayed(() -> {
-                if (count <= 80) {
-                    findJumpText(nodeInfo, className);
-                    count++;
-                } else {
-                    count = 0;
+            XController.getInstance().getmHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (count <= 80) {
+                        findJumpText(nodeInfo, className);
+                        count++;
+                    } else {
+                        count = 0;
+                    }
                 }
-            }, 200);
+            }, 100);
         } else {
             AccessibilityNodeInfo findNodeInfo = accessibilityNodeInfoList.get(0);
             Log.e(TAG, "find text it!id is ===>>" + findNodeInfo.getViewIdResourceName());
             CharSequence text = findNodeInfo.getText();
             Log.e(TAG, "find text it!id is text ===>>" + text);
             if (text.length() <= 10) {
-                String[] texts = text.toString().split("");
-                if (texts[0].equals("跳")) {
+                text = text.toString().replace(" ", "");
+                String pattern = "^[0-9]跳过.*";
+                String pattern002 = "^跳过.*";
+                if (Pattern.matches(pattern, text) || Pattern.matches(pattern002, text)) {
                     skipClick(accessibilityNodeInfoList);
                     addAutoJumpDB(findNodeInfo, className);
                 }
@@ -230,6 +236,7 @@ public class SkipService extends AccessibilityService {
             count = 0;
         }
     }
+
 
     /**
      *

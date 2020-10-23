@@ -44,6 +44,10 @@ public class XController {
         });
     }
 
+    public Handler getmHandler() {
+        return mHandler;
+    }
+
     public AppDatabase getDb() {
         return db;
     }
