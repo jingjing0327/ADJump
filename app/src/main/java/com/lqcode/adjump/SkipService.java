@@ -75,12 +75,11 @@ public class SkipService extends AccessibilityService {
         }
     }
 
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LayoutMessage event) {
-
         myFindWidth.clear();
         AccessibilityNodeInfo rowNode = getRootInActiveWindow();
-        Log.d(TAG, "onMessageEvent: " + event.toString());
         findAllViews(rowNode);
 
         List<Rect> rectList = new ArrayList<>();
@@ -102,25 +101,19 @@ public class SkipService extends AccessibilityService {
             if (rect.bottom - rect.top <= 50)
                 continue;
 
-
             boolean isContains = false;
             for (Rect rectItem : rectList) {
                 if (rectItem.contains(rect)) {
                     isContains = true;
                     break;
                 }
-//                else if (rect.contains(rectItem)) {
-//
-//
-//                }
             }
             if (isContains)
                 continue;
-
             rectList.add(rect);
         }
 
-        kuangView = new Kuang(this, rectList);
+        kuangView = new Kuang(this, rectList, this.lastPackageName, this.lastClassName);
         initWindow();
     }
 
@@ -176,11 +169,15 @@ public class SkipService extends AccessibilityService {
         }
     }
 
+    private String lastPackageName;
+    private String lastClassName;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 //        Log.d(TAG, "onAccessibilityEvent: ===================================================");
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            this.lastPackageName = event.getPackageName().toString();
+            this.lastClassName = event.getClassName().toString();
             Log.d(TAG, "onAccessibilityEvent: event.getClassName()==>" + event.getClassName());
             Log.d(TAG, "onAccessibilityEvent: event.getPackageName()==>" + event.getPackageName());
             Log.d(TAG, "=========================================");

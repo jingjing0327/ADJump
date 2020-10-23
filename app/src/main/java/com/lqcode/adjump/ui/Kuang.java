@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -34,11 +35,15 @@ public class Kuang extends RelativeLayout {
     private Canvas mBitmapCanvas = null;
     private Paint mPaint = null;
 
+    private String packageName;
+    private String className;
 
-    public Kuang(Context context, List<Rect> rectList) {
+    public Kuang(Context context, List<Rect> rectList, String packageName, String className) {
         super(context);
         this.context = context;
         this.rectList = rectList;
+        this.packageName = packageName;
+        this.className = className;
         init();
         setWillNotDraw(false);
     }
@@ -86,6 +91,9 @@ public class Kuang extends RelativeLayout {
                     "lastChooseX==>" + lastChooseX + "----lastChooseY==>" + lastChooseY,
                     Toast.LENGTH_SHORT)
                     .show();
+            Log.d(TAG, "init: ===>>>packageName" + packageName + "-" + className);
+
+
             EventBus.getDefault().post(new RemoveLayoutMessage());
         });
 
@@ -99,12 +107,8 @@ public class Kuang extends RelativeLayout {
 //            clearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 //            clearPaint.setStyle(Paint.Style.FILL);
 //            mBitmapCanvas.drawRect(lastRect, clearPaint);
-//
 //            invalidate();
-
-
             //
-
             layoutOK.setVisibility(GONE);
             layoutExit.setVisibility(VISIBLE);
             lastRect = null;
