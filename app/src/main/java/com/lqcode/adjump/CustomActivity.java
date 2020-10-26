@@ -14,7 +14,6 @@ import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
@@ -25,14 +24,10 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.lqcode.adjump.event.LayoutMessage;
-import com.lqcode.adjump.event.ScreenMessage;
 import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.nio.ByteBuffer;
 
@@ -45,7 +40,6 @@ public class CustomActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom);
-        EventBus.getDefault().register(this);
         findViewById(R.id.create).setOnClickListener(this::zoom);
     }
 
@@ -146,18 +140,6 @@ public class CustomActivity extends AppCompatActivity {
     private ImageReader imageReader;
 //    boolean isGetScreen = true;
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(ScreenMessage event) {
-//        isGetScreen = true;
-//        if (imageReader == null) {
-//
-//        }
-//        if (isGetScreen) {
-//
-//        }
-
-        EventBus.getDefault().post(new LayoutMessage());
-    }
 
 
     @Override
@@ -181,6 +163,5 @@ public class CustomActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d("RemoteView", "被销毁");
-        EventBus.getDefault().unregister(this);
     }
 }

@@ -1,9 +1,20 @@
 package com.lqcode.adjump.tools;
 
+import android.util.Log;
+
+import com.lqcode.adjump.entity.db.DBAppConfig;
+import com.lqcode.adjump.frame.CacheTools;
+import com.lqcode.adjump.frame.XController;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class Tools {
+    private static final String TAG = Tools.class.getSimpleName();
+
     public static String getDeviceId() {
         String deviceId = ValueTools.build().getString("deviceId");
         if (deviceId == null) {
@@ -11,6 +22,18 @@ public class Tools {
             ValueTools.build().putString("deviceId", deviceId);
         }
         return deviceId;
+    }
+
+    public static void setCacheAppsConfig() {
+        new Thread(() -> {
+            List<DBAppConfig> dbAppConfigList = XController.getInstance().getDb().appConfigDao().getAll();
+            Map<String, String> map = new HashMap<>();
+            for (DBAppConfig config : dbAppConfigList) {
+                map.put(config.getPackageActivity(), config.getButtonName());
+            }
+            CacheTools.getInstance().setApps(map);
+            Log.d(TAG, "setCacheAppsConfig: " + CacheTools.getInstance().getApps().toString());
+        }).start();
     }
 
     public static void main(String[] args) {

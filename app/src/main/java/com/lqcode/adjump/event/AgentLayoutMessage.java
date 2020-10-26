@@ -1,4 +1,4 @@
 package com.lqcode.adjump.event;
 
-public class ScreenMessage {
+public class AgentLayoutMessage {
 }

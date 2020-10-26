@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Build;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
@@ -15,10 +14,10 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.RequiresApi;
 
-
 import com.alibaba.fastjson.JSON;
 import com.lqcode.adjump.entity.Result;
 import com.lqcode.adjump.entity.db.DBAutoJumpConfig;
+import com.lqcode.adjump.event.AgentLayoutMessage;
 import com.lqcode.adjump.event.LayoutMessage;
 import com.lqcode.adjump.event.RemoveLayoutMessage;
 import com.lqcode.adjump.frame.CacheTools;
@@ -71,18 +70,34 @@ public class SkipService extends AccessibilityService {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(RemoveLayoutMessage message) {
         if (winManager != null && kuangView != null) {
-            winManager.removeView(kuangView);
+            winManager.removeViewImmediate(kuangView);
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(AgentLayoutMessage message) {
+        if (winManager != null && kuangView != null) {
+            winManager.removeViewImmediate(kuangView);
+            XController.getInstance().getmHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Kuang kuangView001 = new Kuang(SkipService.this, rectList, SkipService.this.lastPackageName, SkipService.this.lastClassName);
+                    winManager.addView(kuangView001, wmParams);
+                    SkipService.this.kuangView = kuangView001;
+                }
+            }, 100);
+            //todo
+        }
+    }
+
+
+    List<Rect> rectList = new ArrayList<>();
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LayoutMessage event) {
         myFindWidth.clear();
         AccessibilityNodeInfo rowNode = getRootInActiveWindow();
         findAllViews(rowNode);
-
-        List<Rect> rectList = new ArrayList<>();
 
         for (AccessibilityNodeInfo nodeInfo : myFindWidth) {
             Log.d(TAG, "findAllViews: " + nodeInfo.getText());
@@ -174,14 +189,11 @@ public class SkipService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-//        Log.d(TAG, "onAccessibilityEvent: ===================================================");
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             this.lastPackageName = event.getPackageName().toString();
             this.lastClassName = event.getClassName().toString();
-            Log.d(TAG, "onAccessibilityEvent: event.getClassName()==>" + event.getClassName());
-            Log.d(TAG, "onAccessibilityEvent: event.getPackageName()==>" + event.getPackageName());
-            Log.d(TAG, "=========================================");
             String key = event.getPackageName() + "-" + event.getClassName();
+            Log.d(TAG, "===========CacheTools.getInstance().getApps().size()=============>>>" + CacheTools.getInstance().getApps().size());
             if (CacheTools.getInstance().getApps() != null && CacheTools.getInstance().getApps().containsKey(key)) {
                 Log.d(TAG, "onAccessibilityEvent: 开始查找！");
                 AccessibilityNodeInfo nodeInfo = event.getSource();
@@ -203,24 +215,21 @@ public class SkipService extends AccessibilityService {
     /**
      * @param nodeInfo
      */
+    private int textCount = 0;
+
     private void findJumpText(final AccessibilityNodeInfo nodeInfo, String className, String packageName) {
         if (!packageName.equals(this.lastPackageName)) return;
         List<AccessibilityNodeInfo> accessibilityNodeInfoList = nodeInfo.findAccessibilityNodeInfosByText("跳过");
-//        Log.d(TAG, "findJumpText: accessibilityNodeInfoList.size===>>>" + accessibilityNodeInfoList.size());
-//        Log.d(TAG, "findJumpText: packageName===>>" + packageName);
-//        Log.d(TAG, "findJumpText: lastPackageName===>" + lastPackageName);
-//        Log.d(TAG, "findJumpText: ==========================================");
         if (accessibilityNodeInfoList.size() <= 0) {
             XController.getInstance().getmHandler().postDelayed(() -> {
-                if (count <= 50) {
+                if (textCount <= 50) {
                     findJumpText(nodeInfo, className, packageName);
-                    count++;
+                    textCount++;
                 } else {
-                    count = 0;
+                    textCount = 0;
                 }
             }, 100);
         } else {
-            Log.d(TAG, "findJumpText: 444444444444444");
             AccessibilityNodeInfo findNodeInfo = accessibilityNodeInfoList.get(0);
             Log.e(TAG, "find text it!id is ===>>" + findNodeInfo.getViewIdResourceName());
             CharSequence text = findNodeInfo.getText();
@@ -234,7 +243,7 @@ public class SkipService extends AccessibilityService {
                     addAutoJumpDB(findNodeInfo, className);
                 }
             }
-            count = 0;
+            textCount = 0;
         }
     }
 
@@ -282,23 +291,23 @@ public class SkipService extends AccessibilityService {
     }
 
 
-    int count = 1;
+    int countId = 1;
 
     private void findNodeInfoViewById(final AccessibilityNodeInfo nodeInfo, final String id) {
         List<AccessibilityNodeInfo> accessibilityNodeInfoList = nodeInfo.findAccessibilityNodeInfosByViewId(id);
         if (accessibilityNodeInfoList.size() <= 0) {
-            new Handler().postDelayed(() -> {
-                if (count <= 80) {
+            XController.getInstance().getmHandler().postDelayed(() -> {
+                if (countId <= 50) {
                     findNodeInfoViewById(nodeInfo, id);
-                    count++;
+                    countId++;
                 } else {
-                    count = 0;
+                    countId = 0;
                 }
-            }, 200);
+            }, 100);
         } else {
             Log.e(TAG, "find id it!");
             skipClick(accessibilityNodeInfoList);
-            count = 0;
+            countId = 0;
         }
     }
 

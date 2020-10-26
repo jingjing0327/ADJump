@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,7 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
-import com.lqcode.adjump.event.ScreenMessage;
+import com.lqcode.adjump.event.LayoutMessage;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -65,7 +64,7 @@ public class FloatWinfowServices extends Service {
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new ScreenMessage());
+                EventBus.getDefault().post(new LayoutMessage());
             }
         });
         //悬浮框触摸事件，设置悬浮框可拖动

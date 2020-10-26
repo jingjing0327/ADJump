@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,8 +18,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-
 import com.lqcode.adjump.R;
+import com.lqcode.adjump.event.AgentLayoutMessage;
+import com.lqcode.adjump.event.LayoutMessage;
 import com.lqcode.adjump.event.RemoveLayoutMessage;
 import com.lqcode.adjump.frame.CacheTools;
 
@@ -93,7 +95,6 @@ public class Kuang extends RelativeLayout {
                     .show();
             Log.d(TAG, "init: ===>>>packageName" + packageName + "-" + className);
 
-
             EventBus.getDefault().post(new RemoveLayoutMessage());
         });
 
@@ -108,10 +109,17 @@ public class Kuang extends RelativeLayout {
 //            clearPaint.setStyle(Paint.Style.FILL);
 //            mBitmapCanvas.drawRect(lastRect, clearPaint);
 //            invalidate();
+
+
             //
             layoutOK.setVisibility(GONE);
             layoutExit.setVisibility(VISIBLE);
             lastRect = null;
+//            mBitmapCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+//            init();
+            EventBus.getDefault().post(new AgentLayoutMessage());
+
+
         });
 
         findViewById(R.id.exit).setOnClickListener(view -> EventBus.getDefault().post(new RemoveLayoutMessage()));
@@ -170,19 +178,12 @@ public class Kuang extends RelativeLayout {
     public boolean onTouchEvent(MotionEvent event) {
         Log.d(TAG, "onTouchEvent: ======>>>>>>>");
 
-        int statusBarHeight1 = -1;
-        //获取status_bar_height资源的ID
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            //根据资源ID获取响应的尺寸值
-            statusBarHeight1 = getResources().getDimensionPixelSize(resourceId);
-        }
         if (event.getAction() == MotionEvent.ACTION_UP && lastChooseX == 0 && lastChooseY == 0)
             for (Rect rect : rectList) {
                 if (event.getRawX() > rect.left &&
                         event.getRawX() < rect.right &&
-                        event.getRawY() - statusBarHeight1 > rect.top &&
-                        event.getRawY() - statusBarHeight1 < rect.bottom) {
+                        event.getRawY() > rect.top &&
+                        event.getRawY() < rect.bottom) {
                     lastRect = rect;
                     lastChooseX = event.getRawX();
                     lastChooseY = event.getRawY();

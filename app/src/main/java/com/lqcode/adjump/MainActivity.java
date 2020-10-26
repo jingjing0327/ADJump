@@ -1,12 +1,5 @@
 package com.lqcode.adjump;
 
-import android.graphics.Bitmap;
-import android.graphics.PixelFormat;
-import android.hardware.display.DisplayManager;
-import android.media.Image;
-import android.media.ImageReader;
-import android.media.projection.MediaProjection;
-import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -17,21 +10,10 @@ import com.alibaba.fastjson.JSON;
 import com.lqcode.adjump.entity.NetApps;
 import com.lqcode.adjump.entity.Result;
 import com.lqcode.adjump.entity.db.DBAppConfig;
-import com.lqcode.adjump.event.LayoutMessage;
-import com.lqcode.adjump.event.ScreenMessage;
 import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
 import com.lqcode.adjump.tools.Tools;
 import com.lqcode.adjump.tools.ValueTools;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import okhttp3.Request;
 import okhttp3.Response;
@@ -50,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         CacheTools.getInstance().setContext(this);
         XController.getInstance();
 
-        setCacheAppsConfig();
+        Tools.setCacheAppsConfig();
         getNewApps();
         Tools.getDeviceId();
 
@@ -60,17 +42,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      *
      */
-    private void setCacheAppsConfig() {
-        new Thread(() -> {
-            List<DBAppConfig> dbAppConfigList = XController.getInstance().getDb().appConfigDao().getAll();
-            Map<String, String> map = new HashMap<>();
-            for (DBAppConfig config : dbAppConfigList) {
-                map.put(config.getPackageActivity(), config.getButtonName());
-            }
-            CacheTools.getInstance().setApps(map);
-            Log.d(TAG, "setCacheAppsConfig: " + CacheTools.getInstance().getApps().toString());
-        }).start();
-    }
+
 
     /**
      *
@@ -108,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
     }
-
-
 
 
     //    @Override
