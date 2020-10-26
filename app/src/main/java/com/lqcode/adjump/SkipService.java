@@ -184,18 +184,18 @@ public class SkipService extends AccessibilityService {
             String key = event.getPackageName() + "-" + event.getClassName();
             if (CacheTools.getInstance().getApps() != null && CacheTools.getInstance().getApps().containsKey(key)) {
                 Log.d(TAG, "onAccessibilityEvent: 开始查找！");
-                AccessibilityNodeInfo nodeInfo = event.getSource();//当前界面的可访问节点信息
+                AccessibilityNodeInfo nodeInfo = event.getSource();
                 if (nodeInfo == null) return;
                 String ids = CacheTools.getInstance().getApps().get(key);
                 if (ids == null) return;
                 if (ids.length() == 0) return;
-                skip(ids, nodeInfo, event.getClassName().toString());
+                skip(ids, nodeInfo, event.getClassName().toString(), event.getPackageName().toString());
             }
 
             if (isDebug) {
                 AccessibilityNodeInfo nodeInfo = event.getSource();
                 if (nodeInfo == null) return;
-                findJumpText(nodeInfo, event.getClassName().toString());
+                findJumpText(nodeInfo, event.getClassName().toString(), event.getPackageName().toString());
             }
         }
     }
@@ -203,29 +203,32 @@ public class SkipService extends AccessibilityService {
     /**
      * @param nodeInfo
      */
-    private void findJumpText(final AccessibilityNodeInfo nodeInfo, String className) {
+    private void findJumpText(final AccessibilityNodeInfo nodeInfo, String className, String packageName) {
+        if (!packageName.equals(this.lastPackageName)) return;
         List<AccessibilityNodeInfo> accessibilityNodeInfoList = nodeInfo.findAccessibilityNodeInfosByText("跳过");
+//        Log.d(TAG, "findJumpText: accessibilityNodeInfoList.size===>>>" + accessibilityNodeInfoList.size());
+//        Log.d(TAG, "findJumpText: packageName===>>" + packageName);
+//        Log.d(TAG, "findJumpText: lastPackageName===>" + lastPackageName);
+//        Log.d(TAG, "findJumpText: ==========================================");
         if (accessibilityNodeInfoList.size() <= 0) {
-            XController.getInstance().getmHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (count <= 80) {
-                        findJumpText(nodeInfo, className);
-                        count++;
-                    } else {
-                        count = 0;
-                    }
+            XController.getInstance().getmHandler().postDelayed(() -> {
+                if (count <= 50) {
+                    findJumpText(nodeInfo, className, packageName);
+                    count++;
+                } else {
+                    count = 0;
                 }
             }, 100);
         } else {
+            Log.d(TAG, "findJumpText: 444444444444444");
             AccessibilityNodeInfo findNodeInfo = accessibilityNodeInfoList.get(0);
             Log.e(TAG, "find text it!id is ===>>" + findNodeInfo.getViewIdResourceName());
             CharSequence text = findNodeInfo.getText();
             Log.e(TAG, "find text it!id is text ===>>" + text);
             if (text.length() <= 10) {
                 text = text.toString().replace(" ", "");
-                String pattern = "^[0-9]跳过.*";
-                String pattern002 = "^跳过.*";
+                String pattern = "^[0-9]跳过[\\s\\S]*";
+                String pattern002 = "^跳过[\\s\\S]*";
                 if (Pattern.matches(pattern, text) || Pattern.matches(pattern002, text)) {
                     skipClick(accessibilityNodeInfoList);
                     addAutoJumpDB(findNodeInfo, className);
@@ -299,11 +302,11 @@ public class SkipService extends AccessibilityService {
         }
     }
 
-    private void skip(String ids, AccessibilityNodeInfo nodeInfo, String className) {
+    private void skip(String ids, AccessibilityNodeInfo nodeInfo, String className, String packageName) {
         for (String id : ids.split(",")) {
             Log.d(TAG, "skip: 查找id为：" + id);
             if (id.equals("-1"))
-                findJumpText(nodeInfo, className);
+                findJumpText(nodeInfo, className, packageName);
             else
                 findNodeInfoViewById(nodeInfo, id);
         }
