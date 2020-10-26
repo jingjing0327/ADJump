@@ -19,28 +19,52 @@ import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.lqcode.adjump.entity.db.DBCustomAppConfig;
 import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CustomActivity extends AppCompatActivity {
 
     private boolean hasBind = false;
+    private List<DBCustomAppConfig> configList = new ArrayList<>();
+    MyAdapter myAdpapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom);
         findViewById(R.id.create).setOnClickListener(this::zoom);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+
+        recyclerView.setAdapter(myAdpapter = new MyAdapter(this));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        xx();
+    }
+
+
+    private void xx() {
+        new Thread(() -> {
+            configList.addAll(XController.getInstance().getDb().customAppConfigDao().getAll());
+            myAdpapter.notifyDataSetChanged();
+        }).start();
     }
 
 
@@ -141,7 +165,6 @@ public class CustomActivity extends AppCompatActivity {
 //    boolean isGetScreen = true;
 
 
-
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -163,5 +186,38 @@ public class CustomActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d("RemoteView", "被销毁");
+    }
+
+    class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+        private Context context;
+
+        public MyAdapter(Context context) {
+            this.context = context;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new MyViewHolder(View.inflate(context, R.layout.custom_item, null));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            holder.textView.setText(configList.get(position).packageActivity);
+        }
+
+        @Override
+        public int getItemCount() {
+            return configList.size();
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            TextView textView;
+
+            public MyViewHolder(@NonNull View itemView) {
+                super(itemView);
+                textView = itemView.findViewById(R.id.textView3);
+            }
+        }
     }
 }

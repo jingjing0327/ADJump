@@ -19,10 +19,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.lqcode.adjump.R;
+import com.lqcode.adjump.entity.db.DBCustomAppConfig;
 import com.lqcode.adjump.event.AgentLayoutMessage;
 import com.lqcode.adjump.event.LayoutMessage;
 import com.lqcode.adjump.event.RemoveLayoutMessage;
 import com.lqcode.adjump.frame.CacheTools;
+import com.lqcode.adjump.frame.XController;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -95,6 +97,15 @@ public class Kuang extends RelativeLayout {
                     .show();
             Log.d(TAG, "init: ===>>>packageName" + packageName + "-" + className);
 
+            new Thread(() -> {
+                DBCustomAppConfig customAppConfig = new DBCustomAppConfig();
+                customAppConfig.setLastChooseX(lastChooseX);
+                customAppConfig.setLastChooseY(lastChooseY);
+                customAppConfig.setPackageActivity(packageName + "-" + className);
+                XController.getInstance().getDb().customAppConfigDao().addAppConfig(customAppConfig);
+            }).start();
+
+
             EventBus.getDefault().post(new RemoveLayoutMessage());
         });
 
@@ -118,7 +129,6 @@ public class Kuang extends RelativeLayout {
 //            mBitmapCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
 //            init();
             EventBus.getDefault().post(new AgentLayoutMessage());
-
 
         });
 
