@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.lqcode.adjump.entity.db.DBCustomAppConfig;
+import com.lqcode.adjump.entity.db.DBCustomAppEntity;
 import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
 
@@ -42,7 +42,7 @@ import java.util.List;
 public class CustomActivity extends AppCompatActivity {
 
     private boolean hasBind = false;
-    private List<DBCustomAppConfig> configList = new ArrayList<>();
+    private List<DBCustomAppEntity> configList = new ArrayList<>();
     MyAdapter myAdpapter;
     private final int SCREEN_CAPTURE = 123;
 

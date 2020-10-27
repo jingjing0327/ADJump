@@ -60,7 +60,6 @@ public class FloatWinfowServices extends Service {
      * 悬浮窗点击事件
      */
     private void initFloating() {
-
         ImageView screenIV = mFloatingLayout.findViewById(R.id.screen_iv);
         screenIV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +111,7 @@ public class FloatWinfowServices extends Service {
                 default:
                     break;
             }
+
             //如果是移动事件不触发OnClick事件，防止移动的时候一放手形成点击事件
             return isMove;
         }

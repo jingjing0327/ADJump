@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -19,9 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.lqcode.adjump.R;
-import com.lqcode.adjump.entity.db.DBCustomAppConfig;
+import com.lqcode.adjump.entity.db.DBCustomAppEntity;
 import com.lqcode.adjump.event.AgentLayoutMessage;
-import com.lqcode.adjump.event.LayoutMessage;
 import com.lqcode.adjump.event.RemoveLayoutMessage;
 import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
@@ -141,7 +138,7 @@ public class Kuang extends RelativeLayout {
     private void saveCustomDB() {
 
         new Thread(() -> {
-            DBCustomAppConfig customAppConfig = new DBCustomAppConfig();
+            DBCustomAppEntity customAppConfig = new DBCustomAppEntity();
             customAppConfig.setLastChooseX(lastChooseX);
             customAppConfig.setLastChooseY(lastChooseY);
             customAppConfig.setPackageActivity(packageName + "-" + className);

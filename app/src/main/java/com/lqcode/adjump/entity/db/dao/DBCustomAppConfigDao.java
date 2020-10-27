@@ -4,17 +4,17 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.lqcode.adjump.entity.db.DBCustomAppConfig;
+import com.lqcode.adjump.entity.db.DBCustomAppEntity;
 
 import java.util.List;
 
 @Dao
 public interface DBCustomAppConfigDao {
 
-    @Query("select * from DBCustomAppConfig")
-    List<DBCustomAppConfig> getAll();
+    @Query("select * from DBCustomAppEntity")
+    List<DBCustomAppEntity> getAll();
 
     @Insert
-    void addAppConfig(DBCustomAppConfig appConfig);
+    void addAppConfig(DBCustomAppEntity appConfig);
 
 }

@@ -58,6 +58,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/weixin_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/toast_layout"
@@ -93,17 +94,11 @@
             android:text="开" />
     </RelativeLayout>
 
-
-    <TextView
-        android:id="@+id/device_id_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:text="唯一编码"
-        android:textColor="#BCBCBC"
-        android:textSize="12sp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/weixin_layout" />
 
 
 </RelativeLayout>

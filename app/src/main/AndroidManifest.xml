@@ -42,8 +42,7 @@
                 android:resource="@xml/accessibility" />
         </service>
 
-        <activity
-            android:name=".CustomActivity"/>
+        <activity android:name=".CustomActivity" />
         <activity
             android:name=".SettingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -52,6 +51,7 @@
 
         <activity android:name=".TestActivity" />
         <activity android:name=".AboutActivity" />
+        <activity android:name=".CustomWhileAppActivity" />
 
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"

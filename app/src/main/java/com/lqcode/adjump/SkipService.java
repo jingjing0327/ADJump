@@ -16,7 +16,7 @@ import androidx.annotation.RequiresApi;
 
 import com.alibaba.fastjson.JSON;
 import com.lqcode.adjump.entity.Result;
-import com.lqcode.adjump.entity.db.DBAutoJumpConfig;
+import com.lqcode.adjump.entity.db.DBAutoJumpEntity;
 import com.lqcode.adjump.event.AgentLayoutMessage;
 import com.lqcode.adjump.event.LayoutMessage;
 import com.lqcode.adjump.event.RemoveLayoutMessage;
@@ -236,9 +236,9 @@ public class SkipService extends AccessibilityService {
     private void addAutoJumpDB(AccessibilityNodeInfo findNodeInfo, String className) {
         new Thread(() -> {
             String packageActivity = findNodeInfo.getPackageName() + "-" + className;
-            List<DBAutoJumpConfig> dbAutoJumpConfigList = XController.getInstance().getDb().autoJumpConfigDao().getByPackageActivity(packageActivity);
+            List<DBAutoJumpEntity> dbAutoJumpConfigList = XController.getInstance().getDb().autoJumpConfigDao().getByPackageActivity(packageActivity);
             if (dbAutoJumpConfigList.size() <= 0) {
-                DBAutoJumpConfig dbAutoJumpConfig = new DBAutoJumpConfig();
+                DBAutoJumpEntity dbAutoJumpConfig = new DBAutoJumpEntity();
                 dbAutoJumpConfig.setPackageActivity(packageActivity);
                 dbAutoJumpConfig.setButtonName(findNodeInfo.getViewIdResourceName() == null ? "-1" : findNodeInfo.getViewIdResourceName());
                 XController.getInstance().getDb().autoJumpConfigDao().addAutoJumpConfig(dbAutoJumpConfig);
@@ -253,7 +253,7 @@ public class SkipService extends AccessibilityService {
     private void uploadCustomAutoJumpAppConfig() {
         int count = XController.getInstance().getDb().autoJumpConfigDao().getCount();
         if (count >= 1) {
-            List<DBAutoJumpConfig> dbAutoJumpConfigList =
+            List<DBAutoJumpEntity> dbAutoJumpConfigList =
                     XController.getInstance().getDb().autoJumpConfigDao().getAll();
             RequestBody body = RequestBody.create(JSON.toJSONString(dbAutoJumpConfigList), MediaType.parse("application/json; charset=utf-8"));
             Request request = new Request.Builder()
