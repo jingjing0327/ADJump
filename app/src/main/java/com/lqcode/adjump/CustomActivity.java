@@ -44,6 +44,7 @@ public class CustomActivity extends AppCompatActivity {
     private boolean hasBind = false;
     private List<DBCustomAppConfig> configList = new ArrayList<>();
     MyAdapter myAdpapter;
+    private final int SCREEN_CAPTURE = 123;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +69,7 @@ public class CustomActivity extends AppCompatActivity {
     }
 
 
-    public void zoom(View v) {
+    private void zoom(View v) {
         if (!Settings.canDrawOverlays(this)) {
             Toast.makeText(this, "当前无权限，请授权", Toast.LENGTH_SHORT);
 
@@ -88,29 +89,26 @@ public class CustomActivity extends AppCompatActivity {
         }
     }
 
-    MediaProjectionManager mediaProjectionManager;
-    int width;
-    int height;
-    int dpi;
+    private MediaProjectionManager mediaProjectionManager;
+    private int dpi;
 
     private void startScreenShot() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
-        width = displayMetrics.widthPixels;
+        int width = displayMetrics.widthPixels;
         CacheTools.getInstance().setWidth(width);
-        height = displayMetrics.heightPixels;
+        int height = displayMetrics.heightPixels;
         CacheTools.getInstance().setHeight(height);
         dpi = displayMetrics.densityDpi;
 
         mediaProjectionManager = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
         if (mediaProjectionManager != null) {
-            startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), 123);
+            startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), SCREEN_CAPTURE);
         }
     }
 
 
     ServiceConnection mVideoServiceConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             // 获取服务的操作对象
@@ -122,6 +120,9 @@ public class CustomActivity extends AppCompatActivity {
         public void onServiceDisconnected(ComponentName name) {
         }
     };
+
+    Image image;
+    Bitmap bitmap;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -137,33 +138,27 @@ public class CustomActivity extends AppCompatActivity {
                 }, 1000);
             }
         }
-        if (requestCode == 123) {
-            mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data);
-            imageReader = ImageReader.newInstance(CacheTools.getInstance().getWidth(), CacheTools.getInstance().getHeight(), PixelFormat.RGBA_8888, 2);
+        if (requestCode == SCREEN_CAPTURE) {
+            MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data);
+            ImageReader imageReader = ImageReader.newInstance(CacheTools.getInstance().getWidth(), CacheTools.getInstance().getHeight(), PixelFormat.RGBA_8888, 2);
             mediaProjection.createVirtualDisplay("screen_shot",
                     CacheTools.getInstance().getWidth(), CacheTools.getInstance().getHeight(), dpi, DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY,
                     imageReader.getSurface(), null, null);
 
             imageReader.setOnImageAvailableListener(reader -> {
-                Image image = reader.acquireNextImage();
+                image = reader.acquireNextImage();
                 final Image.Plane[] planes = image.getPlanes();
                 final ByteBuffer buffer = planes[0].getBuffer();
                 int pixelStride = planes[0].getPixelStride();
                 int rowStride = planes[0].getRowStride();
                 int rowPadding = rowStride - pixelStride * CacheTools.getInstance().getWidth();
-                Bitmap bitmap = Bitmap.createBitmap(CacheTools.getInstance().getWidth() + rowPadding / pixelStride, CacheTools.getInstance().getHeight(), Bitmap.Config.ARGB_8888);
+                bitmap = Bitmap.createBitmap(CacheTools.getInstance().getWidth() + rowPadding / pixelStride, CacheTools.getInstance().getHeight(), Bitmap.Config.ARGB_8888);
                 bitmap.copyPixelsFromBuffer(buffer);
                 image.close();
                 CacheTools.getInstance().setBitmap(bitmap);
             }, null);
         }
     }
-
-
-    MediaProjection mediaProjection;
-    private ImageReader imageReader;
-//    boolean isGetScreen = true;
-
 
     @Override
     protected void onRestart() {
@@ -203,7 +198,7 @@ public class CustomActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.textView.setText(configList.get(position).packageActivity);
+            holder.textView.setText(configList.get(position).toString());
         }
 
         @Override

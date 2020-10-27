@@ -97,14 +97,7 @@ public class Kuang extends RelativeLayout {
                     .show();
             Log.d(TAG, "init: ===>>>packageName" + packageName + "-" + className);
 
-            new Thread(() -> {
-                DBCustomAppConfig customAppConfig = new DBCustomAppConfig();
-                customAppConfig.setLastChooseX(lastChooseX);
-                customAppConfig.setLastChooseY(lastChooseY);
-                customAppConfig.setPackageActivity(packageName + "-" + className);
-                XController.getInstance().getDb().customAppConfigDao().addAppConfig(customAppConfig);
-            }).start();
-
+            saveCustomDB();
 
             EventBus.getDefault().post(new RemoveLayoutMessage());
         });
@@ -141,6 +134,19 @@ public class Kuang extends RelativeLayout {
 
         layoutOK = findViewById(R.id.ok_layout);
         layoutExit = findViewById(R.id.exit_layout);
+
+
+    }
+
+    private void saveCustomDB() {
+
+        new Thread(() -> {
+            DBCustomAppConfig customAppConfig = new DBCustomAppConfig();
+            customAppConfig.setLastChooseX(lastChooseX);
+            customAppConfig.setLastChooseY(lastChooseY);
+            customAppConfig.setPackageActivity(packageName + "-" + className);
+            XController.getInstance().getDb().customAppConfigDao().addAppConfig(customAppConfig);
+        }).start();
 
 
     }

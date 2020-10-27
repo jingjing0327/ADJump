@@ -48,23 +48,6 @@ import okhttp3.Response;
 public class SkipService extends AccessibilityService {
     private static final String TAG = "SkipService";
     private boolean isDebug = true;
-
-    private static final List<String> PageWidgetViews = new ArrayList<String>() {
-        {
-            add("android.widget.RelativeLayout");
-            add("android.widget.LinearLayout");
-            add("android.widget.FrameLayout");
-            add("android.widget.TableLayout");
-            add("android.widget.AbsoluteLayout");
-            add("android.widget.GridLayout");
-            add("android.widget.ConstraintLayout");
-            add("android.widget.TextView");
-            add("android.widget.ConstraintLayout");
-            add("android.widget.ImageView");
-            add("android.widget.Button");
-        }
-    };
-
     private Kuang kuangView;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -78,24 +61,23 @@ public class SkipService extends AccessibilityService {
     public void onMessageEvent(AgentLayoutMessage message) {
         if (winManager != null && kuangView != null) {
             winManager.removeViewImmediate(kuangView);
-            XController.getInstance().getmHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Kuang kuangView001 = new Kuang(SkipService.this, rectList, SkipService.this.lastPackageName, SkipService.this.lastClassName);
-                    winManager.addView(kuangView001, wmParams);
-                    SkipService.this.kuangView = kuangView001;
-                }
+            XController.getInstance().getmHandler().postDelayed(() -> {
+//                Kuang kuangView001 = new Kuang(SkipService.this, rectList, SkipService.this.lastPackageName, SkipService.this.lastClassName);
+//                winManager.addView(kuangView001, wmParams);
+//                SkipService.this.kuangView = kuangView001;
+                onMessageEvent(new LayoutMessage());
             }, 100);
             //todo
         }
     }
 
 
-    List<Rect> rectList = new ArrayList<>();
+    private List<Rect> rectList = new ArrayList<>();
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LayoutMessage event) {
         myFindWidth.clear();
+        rectList.clear();
         AccessibilityNodeInfo rowNode = getRootInActiveWindow();
         findAllViews(rowNode);
 
@@ -173,7 +155,7 @@ public class SkipService extends AccessibilityService {
             for (int i = 0; i < info.getChildCount(); i++) {
                 AccessibilityNodeInfo item = info.getChild(i);
                 if (item.isVisibleToUser())
-                    if (PageWidgetViews.contains(item.getClassName().toString())) {
+                    if (item.getClassName().toString().contains("android.widget.")) {
                         myFindWidth.add(item);
                     }
 
@@ -340,7 +322,7 @@ public class SkipService extends AccessibilityService {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void onTouch(Rect rect) {
         Log.d(TAG, "====onTouch====");
-        Boolean b = dispatchGesture(createClick(rect.left, rect.top), new GestureResultCallback() {
+        Boolean b = dispatchGesture(createClick(rect.left + 1, rect.top + 1), new GestureResultCallback() {
             @Override
             public void onCancelled(GestureDescription gestureDescription) {
                 super.onCancelled(gestureDescription);

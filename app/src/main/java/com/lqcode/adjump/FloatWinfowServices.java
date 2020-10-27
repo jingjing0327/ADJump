@@ -3,6 +3,7 @@ package com.lqcode.adjump;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Binder;
 import android.os.IBinder;
 import android.view.Gravity;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.lqcode.adjump.event.LayoutMessage;
@@ -33,7 +35,6 @@ public class FloatWinfowServices extends Service {
     private LayoutInflater inflater;
     //浮动布局
     private View mFloatingLayout;
-    private LinearLayout linearLayout;
 
 
     @Override
@@ -60,15 +61,15 @@ public class FloatWinfowServices extends Service {
      */
     private void initFloating() {
 
-        linearLayout = mFloatingLayout.findViewById(R.id.line1);
-        linearLayout.setOnClickListener(new View.OnClickListener() {
+        ImageView screenIV = mFloatingLayout.findViewById(R.id.screen_iv);
+        screenIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EventBus.getDefault().post(new LayoutMessage());
             }
         });
         //悬浮框触摸事件，设置悬浮框可拖动
-        linearLayout.setOnTouchListener(new FloatingListener());
+        screenIV.setOnTouchListener(new FloatingListener());
     }
 
 
@@ -111,7 +112,6 @@ public class FloatWinfowServices extends Service {
                 default:
                     break;
             }
-
             //如果是移动事件不触发OnClick事件，防止移动的时候一放手形成点击事件
             return isMove;
         }
@@ -142,11 +142,13 @@ public class FloatWinfowServices extends Service {
         //设置window type 下面变量2002是在屏幕区域显示，2003则可以显示在状态栏之上
         wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
 //        wmParams.type = WindowManager.LayoutParams.LAST_APPLICATION_WINDOW;
+        wmParams.format = PixelFormat.RGBA_8888;
 
         //设置可以显示在状态栏上
         wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR |
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+
 
         //设置悬浮窗口长宽数据
         wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;

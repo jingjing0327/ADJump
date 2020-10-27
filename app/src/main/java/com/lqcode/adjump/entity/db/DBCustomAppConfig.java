@@ -10,7 +10,7 @@ public class DBCustomAppConfig {
     private int id;
 
     @ColumnInfo
-    public String packageActivity;
+    private String packageActivity;
 
     @ColumnInfo
     private float lastChooseX;
@@ -50,5 +50,13 @@ public class DBCustomAppConfig {
         this.packageActivity = packageActivity;
     }
 
-
+    @Override
+    public String toString() {
+        return "DBCustomAppConfig{" +
+                "id=" + id +
+                ", packageActivity='" + packageActivity + '\'' +
+                ", lastChooseX=" + lastChooseX +
+                ", lastChooseY=" + lastChooseY +
+                '}';
+    }
 }

@@ -15,6 +15,8 @@ import com.lqcode.adjump.frame.XController;
 import com.lqcode.adjump.tools.Tools;
 import com.lqcode.adjump.tools.ValueTools;
 
+import java.util.UUID;
+
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -50,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
     private void getNewApps() {
         new Thread(() -> {
             try {
+                //
+                if (CacheTools.getInstance().getApps().size() <= 0)
+                    ValueTools.build().putString("appConfigMd5", UUID.randomUUID().toString());
+                //
                 Request requestMd5 = new Request.Builder()
                         .url("https://api.lqcode.cn/autoSkip/md5")
                         .build();

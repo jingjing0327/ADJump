@@ -21,7 +21,6 @@ public class FirstFragment extends Fragment {
     private static final String TAG = FirstFragment.class.getSimpleName();
     private Intent intent;
     private SwitchCompat serviceSwitch;
-    private TextView serviceText;
     private TextView jumpCount;
 
 
@@ -47,7 +46,7 @@ public class FirstFragment extends Fragment {
             }
         });
 
-        serviceText = rootView.findViewById(R.id.service_text);
+        TextView   serviceText = rootView.findViewById(R.id.service_text);
         serviceText.setText(serviceSwitch.isChecked() ? "服务正在运行" : "服务未开启，点击开启服务");
         jumpCount = rootView.findViewById(R.id.jump_count);
         rootView.findViewById(R.id.setting_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), SettingActivity.class)));
