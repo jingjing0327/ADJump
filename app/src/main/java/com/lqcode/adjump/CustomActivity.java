@@ -3,6 +3,7 @@ package com.lqcode.adjump;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
@@ -20,8 +21,10 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,16 +48,19 @@ import java.util.List;
 public class CustomActivity extends AppCompatActivity {
 
     private boolean hasBind = false;
+    private boolean isStart = false;
     private List<DBCustomAppEntity> configList = new ArrayList<>();
     MyAdapter myAdpapter;
     private final int SCREEN_CAPTURE = 123;
     List<PackageInfo> packageInfoList;
+    private Button create;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom);
-        findViewById(R.id.create).setOnClickListener(this::zoom);
+        create = findViewById(R.id.create);
+        create.setOnClickListener(this::zoom);
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -75,24 +81,32 @@ public class CustomActivity extends AppCompatActivity {
         }).start();
     }
 
+    private Intent intent;
 
     private void zoom(View v) {
-        if (!Settings.canDrawOverlays(this)) {
-            Toast.makeText(this, "当前无权限，请授权", Toast.LENGTH_SHORT);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(CustomActivity.this);
-            builder.setTitle("提示");
-            builder.setMessage("当前无权限，请授权");
-            builder.setCancelable(false);
-            builder.setPositiveButton("去开启", (dialogInterface, i) -> {
-                dialogInterface.dismiss();
-                startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())), 111);
-            }).setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss()).show();
-
+        if (isStart) {
+            mediaProjection.stop();
+            unbindService(mVideoServiceConnection);
+            isStart = false;
+            create.setText("开始创建");
         } else {
-            Intent intent = new Intent(this, FloatWinfowServices.class);
-            hasBind = bindService(intent, mVideoServiceConnection, Context.BIND_AUTO_CREATE);
-            startScreenShot();
+            if (!Settings.canDrawOverlays(this)) {
+                Toast.makeText(this, "当前无权限，请授权", Toast.LENGTH_SHORT);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(CustomActivity.this);
+                builder.setTitle("提示");
+                builder.setMessage("当前无权限，请授权");
+                builder.setCancelable(false);
+                builder.setPositiveButton("去开启", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())), 111);
+                }).setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss()).show();
+            } else {
+                isStart = true;
+                intent = new Intent(this, FloatWinfowServices.class);
+                hasBind = bindService(intent, mVideoServiceConnection, Context.BIND_AUTO_CREATE);
+                startScreenShot();
+            }
         }
     }
 
@@ -130,6 +144,7 @@ public class CustomActivity extends AppCompatActivity {
 
     Image image;
     Bitmap bitmap;
+    MediaProjection mediaProjection;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -139,14 +154,15 @@ public class CustomActivity extends AppCompatActivity {
                 Toast.makeText(this, "授权失败", Toast.LENGTH_SHORT).show();
             } else {
                 XController.getInstance().getmHandler().postDelayed(() -> {
+                    isStart = true;
                     Intent intent = new Intent(CustomActivity.this, FloatWinfowServices.class);
                     hasBind = bindService(intent, mVideoServiceConnection, Context.BIND_AUTO_CREATE);
                     startScreenShot();
-                }, 1000);
+                }, 500);
             }
         }
         if (requestCode == SCREEN_CAPTURE) {
-            MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data);
+            mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data);
             ImageReader imageReader = ImageReader.newInstance(CacheTools.getInstance().getWidth(), CacheTools.getInstance().getHeight(), PixelFormat.RGBA_8888, 2);
             mediaProjection.createVirtualDisplay("screen_shot",
                     CacheTools.getInstance().getWidth(), CacheTools.getInstance().getHeight(), dpi, DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY,
@@ -179,6 +195,13 @@ public class CustomActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        xx();
+        create.setText(isStart ? "停止创建" : "开始创建");
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.d("RemoteView", "重新显示了onNewIntent");
@@ -200,7 +223,7 @@ public class CustomActivity extends AppCompatActivity {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new MyViewHolder(View.inflate(context, R.layout.activity_app_item, null));
+            return new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.activity_app_item, parent, false));
         }
 
         @Override
@@ -217,7 +240,22 @@ public class CustomActivity extends AppCompatActivity {
                     holder.appInfo.setText(activityName + "\nx坐标：" + customAppEntity.getLastChooseX() + "   Y坐标：" + customAppEntity.getLastChooseY());
                 }
             }
-
+            holder.itemView.setOnClickListener(view -> new AlertDialog.Builder(CustomActivity.this)
+                    .setTitle("提示").setMessage("是否删除").setPositiveButton("删除", (dialogInterface, i) -> new Thread(() -> {
+                        XController.
+                                getInstance().
+                                getDb().
+                                customAppConfigDao().
+                                delete(customAppEntity);
+                        XController.
+                                getInstance().
+                                getmHandler().
+                                post(() -> {
+                                    notifyItemRemoved(position);
+                                    configList.remove(position);
+                                });
+                    }).start())
+                    .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss()).show());
         }
 
         @Override

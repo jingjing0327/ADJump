@@ -165,6 +165,6 @@ public class FloatWinfowServices extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        winManager.removeView(mFloatingLayout);
+        winManager.removeView(mFloatingLayout);
     }
 }

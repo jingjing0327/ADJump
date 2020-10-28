@@ -17,6 +17,7 @@ import androidx.annotation.RequiresApi;
 import com.alibaba.fastjson.JSON;
 import com.lqcode.adjump.entity.Result;
 import com.lqcode.adjump.entity.db.DBAutoJumpEntity;
+import com.lqcode.adjump.entity.db.DBCustomAppEntity;
 import com.lqcode.adjump.event.AgentLayoutMessage;
 import com.lqcode.adjump.event.LayoutMessage;
 import com.lqcode.adjump.event.RemoveLayoutMessage;
@@ -176,6 +177,8 @@ public class SkipService extends AccessibilityService {
             this.lastClassName = event.getClassName().toString();
             String key = event.getPackageName() + "-" + event.getClassName();
             Log.d(TAG, "===========CacheTools.getInstance().getApps().size()=============>>>" + CacheTools.getInstance().getApps().size());
+            customAppSkipPosition(key);
+
             if (CacheTools.getInstance().getApps() != null && CacheTools.getInstance().getApps().containsKey(key)) {
                 Log.d(TAG, "onAccessibilityEvent: 开始查找！");
                 AccessibilityNodeInfo nodeInfo = event.getSource();
@@ -191,7 +194,28 @@ public class SkipService extends AccessibilityService {
                 if (nodeInfo == null) return;
                 findJumpText(nodeInfo, event.getClassName().toString(), event.getPackageName().toString());
             }
+
+
         }
+    }
+
+    /**
+     * @param key
+     */
+    private void customAppSkipPosition(String key) {
+        new Thread(() -> {
+            List<DBCustomAppEntity> customAppEntityList = XController.getInstance().getDb().customAppConfigDao().getById(key);
+            if (customAppEntityList != null) {
+                if (customAppEntityList.size() > 0) {
+                    DBCustomAppEntity customAppEntity = customAppEntityList.get(0);
+                    Rect rect = new Rect();
+                    rect.left = (int) customAppEntity.getLastChooseX();
+                    rect.top = (int) customAppEntity.getLastChooseY();
+                    onTouch(rect);
+                }
+            }
+
+        }).start();
     }
 
     /**
