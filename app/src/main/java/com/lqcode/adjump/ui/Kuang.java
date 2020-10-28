@@ -110,8 +110,6 @@ public class Kuang extends RelativeLayout {
 //            clearPaint.setStyle(Paint.Style.FILL);
 //            mBitmapCanvas.drawRect(lastRect, clearPaint);
 //            invalidate();
-
-
             //
             layoutOK.setVisibility(GONE);
             layoutExit.setVisibility(VISIBLE);

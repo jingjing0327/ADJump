@@ -40,12 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    /**
-     *
-     */
-
-
     /**
      *
      */
@@ -53,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 //
-                if (CacheTools.getInstance().getApps().size() <= 0)
+                if (CacheTools.getInstance().getApps()==null||CacheTools.getInstance().getApps().size() <= 0)
                     ValueTools.build().putString("appConfigMd5", UUID.randomUUID().toString());
                 //
                 Request requestMd5 = new Request.Builder()

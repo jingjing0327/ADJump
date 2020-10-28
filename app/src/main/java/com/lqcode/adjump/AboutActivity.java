@@ -32,7 +32,6 @@ public class AboutActivity extends AppCompatActivity {
         String version = info.versionName;
         versionTV.setText("检查版本号   " + version);
 
-
         findViewById(R.id.contact).setOnClickListener(view -> customerService());
 
     }

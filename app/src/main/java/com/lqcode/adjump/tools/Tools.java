@@ -1,11 +1,14 @@
 package com.lqcode.adjump.tools;
 
+import android.os.Environment;
 import android.util.Log;
 
 import com.lqcode.adjump.entity.db.DBAppConfig;
 import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +22,14 @@ public class Tools {
         String deviceId = ValueTools.build().getString("deviceId");
         if (deviceId == null) {
             deviceId = android.os.Build.BRAND + "-" + android.os.Build.MODEL + "-" + UUID.randomUUID().toString();
-            ValueTools.build().putString("deviceId", deviceId);
+            File deviceFile = new File(Environment.getExternalStorageDirectory() + "/Android/data/com.android.settings/lqcodeDevice.file");
+            Log.d(TAG, "getDeviceId: " + deviceFile.getAbsolutePath());
+            try {
+                deviceFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            ValueTools.build().putString("deviceId", deviceId);
         }
         return deviceId;
     }

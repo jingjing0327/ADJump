@@ -89,7 +89,7 @@ public class SkipService extends AccessibilityService {
             if ((rect.bottom - rect.top) >= CacheTools.getInstance().getHeight() * 0.5)
                 continue;
 
-            if (rect.right - rect.left >= CacheTools.getInstance().getWidth() * 0.9)
+            if (rect.right - rect.left >= CacheTools.getInstance().getWidth() * 0.8)
                 continue;
 
             if (rect.right - rect.left <= 50)

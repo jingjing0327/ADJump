@@ -66,6 +66,9 @@ public class SettingActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *
+     */
     class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private Context context;
 

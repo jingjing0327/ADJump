@@ -48,6 +48,5 @@ public class CustomWhileAppActivity extends AppCompatActivity {
             int count = XController.getInstance().getDb().whileAppConfigDao().getCountByPackage(packageName);
             switchCompat.setChecked(count > 0);
         }).start();
-
     }
 }

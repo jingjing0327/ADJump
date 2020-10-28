@@ -5,6 +5,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.hardware.display.DisplayManager;
@@ -20,6 +22,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +48,7 @@ public class CustomActivity extends AppCompatActivity {
     private List<DBCustomAppEntity> configList = new ArrayList<>();
     MyAdapter myAdpapter;
     private final int SCREEN_CAPTURE = 123;
+    List<PackageInfo> packageInfoList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +62,9 @@ public class CustomActivity extends AppCompatActivity {
         recyclerView.setAdapter(myAdpapter = new MyAdapter(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         xx();
+
+        PackageManager pm = getPackageManager();
+        packageInfoList = pm.getInstalledPackages(0);
     }
 
 
@@ -193,12 +200,24 @@ public class CustomActivity extends AppCompatActivity {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new MyViewHolder(View.inflate(context, R.layout.custom_item, null));
+            return new MyViewHolder(View.inflate(context, R.layout.activity_app_item, null));
         }
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.textView.setText(configList.get(position).toString());
+            DBCustomAppEntity customAppEntity = configList.get(position);
+            String[] packageNameActivity = customAppEntity.getPackageActivity().split("-");
+            String packageName = packageNameActivity[0];
+            String activityName = packageNameActivity[1];
+
+            for (PackageInfo packageInfo : packageInfoList) {
+                if (packageInfo.packageName.equals(packageName)) {
+                    holder.appIcon.setImageDrawable(packageInfo.applicationInfo.loadIcon(getPackageManager()));
+                    holder.appName.setText(packageInfo.applicationInfo.loadLabel(getPackageManager()));
+                    holder.appInfo.setText(activityName + "\nx坐标：" + customAppEntity.getLastChooseX() + "   Y坐标：" + customAppEntity.getLastChooseY());
+                }
+            }
+
         }
 
         @Override
@@ -207,11 +226,15 @@ public class CustomActivity extends AppCompatActivity {
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
-            TextView textView;
+            TextView appName;
+            TextView appInfo;
+            ImageView appIcon;
 
             public MyViewHolder(@NonNull View itemView) {
                 super(itemView);
-                textView = itemView.findViewById(R.id.textView3);
+                appName = itemView.findViewById(R.id.app_name);
+                appInfo = itemView.findViewById(R.id.app_info);
+                appIcon = itemView.findViewById(R.id.app_icon);
             }
         }
     }
