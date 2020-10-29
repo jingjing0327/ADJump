@@ -101,7 +101,7 @@
         android:background="@drawable/ripple_backgroud"
         android:gravity="center_vertical"
         android:padding="15dp"
-        android:text="自定义规则"
+        android:text="          自定义规则"
         android:textColor="#000000"
         android:textSize="16sp"
         app:drawableRightCompat="@mipmap/back"
@@ -109,22 +109,42 @@
         tools:layout_editor_absoluteX="16dp" />
 
 
+    <ImageView
+        android:id="@+id/div_iv"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="120dp"
+        android:src="@mipmap/div"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/jump_count" />
+
     <TextView
         android:id="@+id/setting_tv"
         android:layout_width="match_parent"
-        android:background="@drawable/ripple_backgroud"
         android:layout_height="wrap_content"
         android:layout_below="@id/custom_tv"
         android:layout_marginTop="12dp"
+        android:background="@drawable/ripple_backgroud"
         android:gravity="center_vertical"
         android:padding="15dp"
-        android:text="设置"
+        android:text="          设置"
         android:textColor="#000000"
         android:textSize="16sp"
         app:drawableRightCompat="@mipmap/back"
         app:layout_constraintTop_toBottomOf="@+id/custom_tv"
         tools:layout_editor_absoluteX="0dp" />
 
+
+    <ImageView
+        android:id="@+id/setting_iv"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:src="@mipmap/setting"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/custom_tv" />
 
     <TextView
         android:id="@+id/about_tv"
@@ -135,13 +155,22 @@
         android:background="@drawable/ripple_backgroud"
         android:gravity="center_vertical"
         android:padding="15dp"
-        android:text="关于"
+        android:text="          关于"
         android:textColor="#000000"
         android:textSize="16sp"
         app:drawableRightCompat="@mipmap/back"
         app:layout_constraintTop_toBottomOf="@+id/setting_tv"
         tools:layout_editor_absoluteX="0dp" />
 
+
+    <ImageView
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:src="@mipmap/about"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setting_tv" />
 
     <TextView
         android:id="@+id/test_tv"

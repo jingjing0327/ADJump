@@ -3,7 +3,6 @@ package com.lqcode.adjump;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
@@ -59,6 +58,7 @@ public class CustomActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom);
+        setTitle("自定义");
         create = findViewById(R.id.create);
         create.setOnClickListener(this::zoom);
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
@@ -76,8 +76,12 @@ public class CustomActivity extends AppCompatActivity {
 
     private void xx() {
         new Thread(() -> {
-            configList.addAll(XController.getInstance().getDb().customAppConfigDao().getAll());
-            myAdpapter.notifyDataSetChanged();
+            List<DBCustomAppEntity> dbCustomAppEntityList = XController.getInstance().getDb().customAppConfigDao().getAll();
+            if (dbCustomAppEntityList.size() != configList.size()) {
+                configList.clear();
+                configList.addAll(dbCustomAppEntityList);
+                myAdpapter.notifyDataSetChanged();
+            }
         }).start();
     }
 
@@ -186,6 +190,7 @@ public class CustomActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+
         Log.d("RemoteView", "重新显示了");
 //不显示悬浮框
 //        if (hasBind) {
@@ -240,22 +245,43 @@ public class CustomActivity extends AppCompatActivity {
                     holder.appInfo.setText(activityName + "\nx坐标：" + customAppEntity.getLastChooseX() + "   Y坐标：" + customAppEntity.getLastChooseY());
                 }
             }
-            holder.itemView.setOnClickListener(view -> new AlertDialog.Builder(CustomActivity.this)
-                    .setTitle("提示").setMessage("是否删除").setPositiveButton("删除", (dialogInterface, i) -> new Thread(() -> {
-                        XController.
-                                getInstance().
-                                getDb().
-                                customAppConfigDao().
-                                delete(customAppEntity);
-                        XController.
-                                getInstance().
-                                getmHandler().
-                                post(() -> {
-                                    notifyItemRemoved(position);
-                                    configList.remove(position);
-                                });
-                    }).start())
-                    .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss()).show());
+
+            holder.itemView.setOnLongClickListener(view -> {
+                new AlertDialog.Builder(CustomActivity.this)
+                        .setTitle("提示").setMessage("是否删除").setPositiveButton("删除", (dialogInterface, i) -> new Thread(() -> {
+                    XController.
+                            getInstance().
+                            getDb().
+                            customAppConfigDao().
+                            delete(customAppEntity);
+                    XController.
+                            getInstance().
+                            getmHandler().
+                            post(() -> {
+                                notifyItemRemoved(position);
+                                configList.remove(position);
+                            });
+                }).start())
+                        .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss()).show();
+
+                return false;
+            });
+//            holder.itemView.setOnClickListener(view -> new AlertDialog.Builder(CustomActivity.this)
+//                    .setTitle("提示").setMessage("是否删除").setPositiveButton("删除", (dialogInterface, i) -> new Thread(() -> {
+//                        XController.
+//                                getInstance().
+//                                getDb().
+//                                customAppConfigDao().
+//                                delete(customAppEntity);
+//                        XController.
+//                                getInstance().
+//                                getmHandler().
+//                                post(() -> {
+//                                    notifyItemRemoved(position);
+//                                    configList.remove(position);
+//                                });
+//                    }).start())
+//                    .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss()).show());
         }
 
         @Override

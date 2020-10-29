@@ -20,6 +20,7 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+        setTitle("关于");
         TextView versionTV = findViewById(R.id.version);
 
         PackageManager manager = this.getPackageManager();
@@ -31,9 +32,7 @@ public class AboutActivity extends AppCompatActivity {
         }
         String version = info.versionName;
         versionTV.setText("检查版本号   " + version);
-
         findViewById(R.id.contact).setOnClickListener(view -> customerService());
-
     }
 
     /**

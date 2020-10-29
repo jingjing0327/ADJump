@@ -2,10 +2,14 @@ package com.lqcode.adjump.frame;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.room.Room;
 
+import com.lqcode.adjump.R;
 import com.lqcode.adjump.entity.db.AppDatabase;
 
 public class XController {
@@ -14,9 +18,15 @@ public class XController {
     private Toast toast;
     private Handler mHandler;
     private AppDatabase db;
+    private TextView toastTV;
 
     private XController() {
-        toast = Toast.makeText(CacheTools.getInstance().getContext(), "", Toast.LENGTH_SHORT);
+
+        View view = LayoutInflater.from(CacheTools.getInstance().getContext()).inflate(R.layout.toast_layout, null);
+        toastTV = (TextView) view.findViewById(R.id.textView4);
+        toast = new Toast(CacheTools.getInstance().getContext());
+        toast.setView(view);
+
         mHandler = new Handler(Looper.getMainLooper());
         db = Room.databaseBuilder(
                 CacheTools.getInstance().getContext(),
@@ -38,7 +48,7 @@ public class XController {
     public void toastShow(String text) {
         mHandler.post(() -> {
             if (text != null) {
-                toast.setText(text);
+                toastTV.setText(text);
                 toast.show();
             }
         });

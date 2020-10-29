@@ -211,10 +211,10 @@ public class SkipService extends AccessibilityService {
                     Rect rect = new Rect();
                     rect.left = (int) customAppEntity.getLastChooseX();
                     rect.top = (int) customAppEntity.getLastChooseY();
-                    onTouch(rect);
+                    Log.d(TAG, "DB---customAppSkipPosition: ===>>>>>" + rect.left + "====>>" + rect.top);
+                    XController.getInstance().getmHandler().postDelayed(() -> onTouch(rect), 500);
                 }
             }
-
         }).start();
     }
 
