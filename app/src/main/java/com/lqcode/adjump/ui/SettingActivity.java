@@ -1,4 +1,4 @@
-package com.lqcode.adjump;
+package com.lqcode.adjump.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lqcode.adjump.R;
 import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.tools.ValueTools;
 
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends BaseActivity {
 
     @Override
     protected void onStart() {
@@ -42,6 +43,7 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        CacheTools.getInstance().setContext(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("设置");
         setSupportActionBar(toolbar);

@@ -1,4 +1,4 @@
-package com.lqcode.adjump;
+package com.lqcode.adjump.ui;
 
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -35,6 +35,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lqcode.adjump.FloatWinfowServices;
+import com.lqcode.adjump.R;
 import com.lqcode.adjump.entity.db.DBCustomAppEntity;
 import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
@@ -44,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CustomActivity extends AppCompatActivity {
+public class CustomActivity extends BaseActivity {
 
     private boolean hasBind = false;
     private boolean isStart = false;

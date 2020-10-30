@@ -1,15 +1,16 @@
-package com.lqcode.adjump;
+package com.lqcode.adjump.ui;
 
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class PermissionsActivity extends AppCompatActivity {
+import com.lqcode.adjump.frame.CacheTools;
 
+public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_permissions);
+        CacheTools.getInstance().setContext(this);
     }
 }

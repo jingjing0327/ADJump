@@ -1,4 +1,4 @@
-package com.lqcode.adjump;
+package com.lqcode.adjump.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,16 +10,19 @@ import android.webkit.WebViewClient;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class TestActivity extends AppCompatActivity {
+import com.lqcode.adjump.R;
+import com.lqcode.adjump.frame.CacheTools;
+
+public class TestActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
+        CacheTools.getInstance().setContext(this);
         WebView webView = findViewById(R.id.webview);
         webView.loadUrl("https://qr.alipay.com/bax04672huwxlkymbopf80cb");
 //        webView.loadUrl("https://payjs.cn/qrcode/d2VpeGluOi8vd3hwYXkvYml6cGF5dXJsP3ByPVBaU2lXQUIwMA==");
-
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         // 设置可以访问文件
@@ -28,13 +31,10 @@ public class TestActivity extends AppCompatActivity {
         webSettings.setBuiltInZoomControls(true);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         // webSettings.setDatabaseEnabled(true);
-
         // 使用localStorage则必须打开
         webSettings.setDomStorageEnabled(true);
-
         webSettings.setGeolocationEnabled(true);
-
-        webView.setWebViewClient(new WebViewClient(){
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 // TODO Auto-generated method stub
@@ -60,14 +60,12 @@ public class TestActivity extends AppCompatActivity {
                         startActivity(intent);
 
                     } catch (Exception e) {
-
+                        e.printStackTrace();
                     }
                 } else {
                     view.loadUrl(url);
                 }
-
                 return true;
-
             }
 
         });

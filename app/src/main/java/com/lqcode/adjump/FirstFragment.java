@@ -16,6 +16,11 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.lqcode.adjump.tools.ValueTools;
+import com.lqcode.adjump.ui.AboutActivity;
+import com.lqcode.adjump.ui.CustomActivity;
+import com.lqcode.adjump.ui.SettingActivity;
+import com.lqcode.adjump.ui.SkipService;
+import com.lqcode.adjump.ui.TestActivity;
 
 public class FirstFragment extends Fragment {
     private static final String TAG = FirstFragment.class.getSimpleName();

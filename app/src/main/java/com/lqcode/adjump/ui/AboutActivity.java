@@ -1,4 +1,4 @@
-package com.lqcode.adjump;
+package com.lqcode.adjump.ui;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -12,9 +12,11 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.lqcode.adjump.R;
+
 import java.util.List;
 
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

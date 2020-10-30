@@ -1,4 +1,4 @@
-package com.lqcode.adjump;
+package com.lqcode.adjump.ui;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -7,10 +7,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
+import com.lqcode.adjump.R;
 import com.lqcode.adjump.entity.db.DBCustomWhileAppEntity;
 import com.lqcode.adjump.frame.XController;
 
-public class CustomWhileAppActivity extends AppCompatActivity {
+public class CustomWhileAppActivity extends BaseActivity {
     private static final String TAG = CustomWhileAppActivity.class.getSimpleName();
     SwitchCompat switchCompat;
 
