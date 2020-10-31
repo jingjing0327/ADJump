@@ -236,12 +236,12 @@ public class SkipService extends AccessibilityService {
     private int textCount = 0;
 
     private void findJumpText(final AccessibilityNodeInfo nodeInfo, String className, String packageName) {
-//        if (!className.equals(this.lastClassName)) return;
+        if (!className.equals(this.lastClassName)) return;
         List<AccessibilityNodeInfo> accessibilityNodeInfoList = nodeInfo.findAccessibilityNodeInfosByText("跳过");
-        Log.d(TAG, "findJumpText:accessibilityNodeInfoList.size() ==>" + accessibilityNodeInfoList.size());
+//        Log.d(TAG, "findJumpText:accessibilityNodeInfoList.size() ==>" + accessibilityNodeInfoList.size());
         if (accessibilityNodeInfoList.size() <= 0) {
             XController.getInstance().getmHandler().postDelayed(() -> {
-                if (textCount <= 30) {
+                if (textCount <= 50) {
                     findJumpText(nodeInfo, className, packageName);
                     textCount++;
                 } else {
@@ -313,16 +313,11 @@ public class SkipService extends AccessibilityService {
     int countId = 1;
 
     private void findNodeInfoViewById(final AccessibilityNodeInfo nodeInfo, final String id, String className) {
-        Log.d(TAG, "findNodeInfoViewById: 1111111111111" + className + "====" + this.lastClassName);
-//        if (!className.equals(this.lastClassName)) return;
-        Log.d(TAG, "findNodeInfoViewById: 222222222");
+        if (!className.equals(this.lastClassName)) return;
         List<AccessibilityNodeInfo> accessibilityNodeInfoList = nodeInfo.findAccessibilityNodeInfosByViewId(id);
-        Log.d(TAG, "findNodeInfoViewById: 3333333333333333");
         if (accessibilityNodeInfoList.size() <= 0) {
-            Log.d(TAG, "findNodeInfoViewById: 4444444444444");
             XController.getInstance().getmHandler().postDelayed(() -> {
                 if (countId <= 50) {
-                    Log.d(TAG, "findNodeInfoViewById: 555555555555555");
                     findNodeInfoViewById(nodeInfo, id, className);
                     countId++;
                 } else {
@@ -330,7 +325,6 @@ public class SkipService extends AccessibilityService {
                 }
             }, 100);
         } else {
-            Log.d(TAG, "findNodeInfoViewById: 6666666666666");
             Log.e(TAG, "find id it!");
             skipClick(accessibilityNodeInfoList);
             countId = 0;
@@ -354,12 +348,14 @@ public class SkipService extends AccessibilityService {
                     findNodeInfoViewById(nodeInfo, id, className);
             }
         }).start();
-
     }
 
-
+    /**
+     * @param nodeInfoList
+     */
     private void skipClick(List<AccessibilityNodeInfo> nodeInfoList) {
         new Thread(() -> {
+            this.lastClassName = null;
             boolean isClick = nodeInfoList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
             Rect rect = new Rect();
             nodeInfoList.get(0).getBoundsInScreen(rect);
@@ -372,14 +368,22 @@ public class SkipService extends AccessibilityService {
                 onTouch(rect);
             }
         }).start();
-
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void onTouch(Rect rect) {
         Log.d(TAG, "====onTouch====");
-        Boolean b = dispatchGesture(createClick(rect.left + 1, rect.top + 1), new GestureResultCallback() {
+        Log.d(TAG, "onTouch: 111top==>" + rect.top + "===left==>" + rect.left);
+        if (rect.bottom > 0 && rect.right > 0) {
+            int rectHeight = rect.bottom - rect.top;
+            int rectWidth = rect.right - rect.left;
+            rect.left = rect.left + (rectWidth / 2);
+            rect.top = rect.top + (rectHeight / 2);
+        }
+        Log.d(TAG, "onTouch: 222top==>" + rect.top + "===left==>" + rect.left);
+
+        Boolean b = dispatchGesture(createClick(rect.left, rect.top), new GestureResultCallback() {
             @Override
             public void onCancelled(GestureDescription gestureDescription) {
                 super.onCancelled(gestureDescription);

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.mob.sdk'
 
 android {
     compileSdkVersion 28
@@ -30,6 +31,17 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+// 在MobSDK的扩展中注册SMSSDK的相关信息
+MobSDK {
+//    domain 'jp'
+    appKey '314a2aa5ac50c'
+    appSecret 'a1c24fccbcadc463e44bc5062e6d3e6d'
+
+    SMSSDK {
+        // 若使用GUI的自动填充验证码功能，需打开此设置
+//        autoSMS true
     }
 }
 
