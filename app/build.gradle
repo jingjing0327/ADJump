@@ -22,6 +22,21 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            storeFile file("../key/lqcode_player.jks")
+            storePassword "asdfg12345"
+            keyAlias "lqcode"
+            keyPassword "asdfg12345"
+        }
+        debug {
+            storeFile file("../key/lqcode_player.jks")
+            storePassword "asdfg12345"
+            keyAlias "lqcode"
+            keyPassword "asdfg12345"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -42,6 +57,7 @@ MobSDK {
     SMSSDK {
         // 若使用GUI的自动填充验证码功能，需打开此设置
 //        autoSMS true
+        gui false
     }
 }
 

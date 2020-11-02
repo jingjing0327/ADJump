@@ -1,4 +1,4 @@
-package com.lqcode.adjump;
+package com.lqcode.adjump.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,12 +15,8 @@ import android.widget.TextView;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
+import com.lqcode.adjump.R;
 import com.lqcode.adjump.tools.ValueTools;
-import com.lqcode.adjump.ui.AboutActivity;
-import com.lqcode.adjump.ui.CustomActivity;
-import com.lqcode.adjump.ui.SettingActivity;
-import com.lqcode.adjump.ui.SkipService;
-import com.lqcode.adjump.ui.TestActivity;
 
 public class FirstFragment extends Fragment {
     private static final String TAG = FirstFragment.class.getSimpleName();
@@ -56,7 +52,7 @@ public class FirstFragment extends Fragment {
         jumpCount = rootView.findViewById(R.id.jump_count);
         rootView.findViewById(R.id.setting_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), SettingActivity.class)));
         rootView.findViewById(R.id.about_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), AboutActivity.class)));
-        rootView.findViewById(R.id.test_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), TestActivity.class)));
+        rootView.findViewById(R.id.test_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), LoginActivity.class)));
         rootView.findViewById(R.id.custom_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), CustomActivity.class)));
 
         return rootView;

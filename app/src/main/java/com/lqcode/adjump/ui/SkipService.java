@@ -173,6 +173,7 @@ public class SkipService extends AccessibilityService {
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             try {
+                Log.d(TAG, "onAccessibilityEvent: ===>>>"+event.getClassName().toString());
                 if (event.getClassName().toString().contains("android.widget.")) return;
                 if (event.getClassName().toString().contains("android.view.")) return;
 
@@ -201,6 +202,7 @@ public class SkipService extends AccessibilityService {
                 }
 
                 if (isDebug) {
+                    Log.d(TAG, "onAccessibilityEvent: 开始查找text！");
                     AccessibilityNodeInfo nodeInfo = event.getSource();
                     if (nodeInfo == null) return;
                     findJumpText(nodeInfo, event.getClassName().toString(), event.getPackageName().toString());

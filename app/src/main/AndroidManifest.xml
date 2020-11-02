@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MyApplication"
@@ -43,6 +44,7 @@
         </service>
 
         <activity android:name=".ui.CustomActivity" />
+        <activity android:name=".ui.LoginActivity" />
         <activity
             android:name=".ui.SettingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
