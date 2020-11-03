@@ -19,8 +19,7 @@ public class ExampleUnitTest {
 
     @Test
     public void main() {
-        String text = "跳过ssss\n" +
-                "    3s";
+        String text = "跳过 5";
         text = text.toString().replace(" ", "");
         String pattern = "^[0-9]跳过.*";
         String pattern002 = "^跳过[\\s\\S]*";

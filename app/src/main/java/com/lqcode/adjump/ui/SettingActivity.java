@@ -50,10 +50,19 @@ public class SettingActivity extends BaseActivity {
         SwitchCompat jumpToastSwitch = findViewById(R.id.jump_toast_switch);
         SwitchCompat weixinAutoLoginSwitch = findViewById(R.id.weixin_auto_login_switch);
         jumpToastSwitch.setChecked(ValueTools.build().getInt("jump_toast_switch") > 0);
-        weixinAutoLoginSwitch.setChecked(ValueTools.build().getInt("weixin_auto_login_switch") > 0);
-        jumpToastSwitch.setOnCheckedChangeListener((compoundButton, b) -> ValueTools.build().putInt("jump_toast_switch", b ? 1 : 0));
-        weixinAutoLoginSwitch.setOnCheckedChangeListener((compoundButton, b) -> ValueTools.build().putInt("weixin_auto_login_switch", b ? 1 : 0));
+        jumpToastSwitch.setText(ValueTools.build().getInt("jump_toast_switch") > 0 ? "开" : "关");
 
+        weixinAutoLoginSwitch.setChecked(ValueTools.build().getInt("weixin_auto_login_switch") > 0);
+        jumpToastSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+            ValueTools.build().putInt("jump_toast_switch", b ? 1 : 0);
+            jumpToastSwitch.setText(ValueTools.build().getInt("jump_toast_switch") > 0 ? "开" : "关");
+
+        });
+        weixinAutoLoginSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+            ValueTools.build().putInt("weixin_auto_login_switch", b ? 1 : 0);
+            weixinAutoLoginSwitch.setText(ValueTools.build().getInt("weixin_auto_login_switch") > 0 ? "开" : "关");
+        });
+        weixinAutoLoginSwitch.setText(ValueTools.build().getInt("weixin_auto_login_switch") > 0 ? "开" : "关");
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);

@@ -54,6 +54,9 @@
         <activity android:name=".ui.TestActivity" />
         <activity android:name=".ui.AboutActivity" />
         <activity android:name=".ui.CustomWhileAppActivity" />
+        <activity android:name=".ui.VIPActivity" />
+        <activity android:name=".ui.PayActivity" />
+        <activity android:name=".ui.KeyVipActivity" />
 
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
