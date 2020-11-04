@@ -44,7 +44,7 @@
         </service>
 
         <activity android:name=".ui.CustomActivity" />
-        <activity android:name=".ui.LoginActivity" />
+        <activity android:name=".ui.OldUserActivity" />
         <activity
             android:name=".ui.SettingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -55,7 +55,7 @@
         <activity android:name=".ui.AboutActivity" />
         <activity android:name=".ui.CustomWhileAppActivity" />
         <activity android:name=".ui.VIPActivity" />
-        <activity android:name=".ui.PayActivity" />
+        <activity android:name=".ui.NewUserPayActivity" />
         <activity android:name=".ui.KeyVipActivity" />
 
         <activity

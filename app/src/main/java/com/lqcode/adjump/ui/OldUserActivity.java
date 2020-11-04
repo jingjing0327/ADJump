@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 
 import com.alibaba.fastjson.JSON;
 import com.lqcode.adjump.R;
@@ -18,9 +19,9 @@ import com.mob.MobSDK;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
-public class LoginActivity extends BaseActivity {
+public class OldUserActivity extends BaseActivity {
 
-    private static final String TAG = LoginActivity.class.getName();
+    private static final String TAG = OldUserActivity.class.getName();
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -47,6 +48,12 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("老用户激活");
+
         MobSDK.submitPolicyGrantResult(true, null);
         xx();
         EditText phoneNumber = findViewById(R.id.phone_number);

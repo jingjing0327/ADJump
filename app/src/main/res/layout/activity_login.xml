@@ -7,13 +7,15 @@
 
     <EditText
         android:id="@+id/phone_number"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="16dp"
+        android:layout_marginRight="20dp"
         android:ems="10"
+        android:hint="手机号"
         android:inputType="phone"
-        android:text="18810057706"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,34 +23,43 @@
         android:id="@+id/send_msm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
-        android:text="Button"
+        android:background="@color/colorPrimary"
+        android:text="获取验证码"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/phone_number"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/phone_number" />
 
     <EditText
         android:id="@+id/check_msm"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="20dp"
         android:ems="10"
+        android:hint="验证码"
         android:inputType="number"
+        app:layout_constraintEnd_toStartOf="@+id/send_msm"
+        app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/phone_number" />
 
     <Button
         android:id="@+id/check_msm_button"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="12dp"
-        android:text="Button"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/colorPrimary"
+        android:text="验证"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.058"
-        app:layout_constraintStart_toEndOf="@+id/check_msm"
-        app:layout_constraintTop_toBottomOf="@+id/send_msm" />
+        app:layout_constraintHorizontal_bias="0.467"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/check_msm" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -169,11 +169,15 @@ public class SkipService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            this.lastPackageName = event.getPackageName().toString();
+            this.lastClassName = event.getClassName().toString();
+        }
+        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
             try {
 //                if (event.getClassName().toString().contains("android.widget.")) return;
                 if (event.getClassName().toString().contains("android.view.")) return;
-                this.lastPackageName = event.getPackageName().toString();
-                this.lastClassName = event.getClassName().toString();
+                Log.d(TAG, "onAccessibilityEvent: className==>>" + event.getClassName());
+//                if (!event.getClassName().equals(this.lastClassName)) return;
 
                 String key = event.getPackageName() + "-" + event.getClassName();
                 customAppSkipPosition(key);
@@ -228,33 +232,23 @@ public class SkipService extends AccessibilityService {
     private int textCount = 0;
 
     private void findJumpText(AccessibilityNodeInfo nodeInfo, String className, String packageName) {
-        new Thread(() -> {
-//        if (!className.equals(this.lastClassName)) return;
-            List<AccessibilityNodeInfo> accessibilityNodeInfoList = nodeInfo.findAccessibilityNodeInfosByText("跳过");
-            if (accessibilityNodeInfoList.size() <= 0) {
-                XController.getInstance().getmHandler().postDelayed(() -> {
-                    if (textCount <= 50) {
-                        findJumpText(nodeInfo, className, packageName);
-                        textCount++;
-                    } else {
-                        textCount = 0;
-                    }
-                }, 100);
-            } else {
-                AccessibilityNodeInfo findNodeInfo = accessibilityNodeInfoList.get(0);
-                CharSequence text = findNodeInfo.getText();
-                if (text.length() <= 10) {
-                    text = text.toString().replace(" ", "");
-                    String pattern = "^[0-9]跳过[\\s\\S]*";
-                    String pattern002 = "^跳过[\\s\\S]*";
-                    if (Pattern.matches(pattern, text) || Pattern.matches(pattern002, text)) {
-                        skipClick(accessibilityNodeInfoList);
-                        addAutoJumpDB(findNodeInfo, className);
-                    }
+        Log.d(TAG, "findJumpText: -------------------" + className);
+        List<AccessibilityNodeInfo> accessibilityNodeInfoList = nodeInfo.findAccessibilityNodeInfosByText("跳过");
+        if (accessibilityNodeInfoList.size() > 0) {
+            AccessibilityNodeInfo findNodeInfo = accessibilityNodeInfoList.get(0);
+            CharSequence text = findNodeInfo.getText();
+            if (text.length() <= 10) {
+                text = text.toString().replace(" ", "");
+                String pattern = "^[0-9]跳过[\\s\\S]*";
+                String pattern002 = "^跳过[\\s\\S]*";
+                if (Pattern.matches(pattern, text) || Pattern.matches(pattern002, text)) {
+                    Log.d(TAG, "findJumpText: " + className + "---" + packageName);
+                    skipClick(accessibilityNodeInfoList);
+                    addAutoJumpDB(findNodeInfo, className);
                 }
-                textCount = 0;
             }
-        }).start();
+            textCount = 0;
+        }
     }
 
 
@@ -304,24 +298,12 @@ public class SkipService extends AccessibilityService {
     int countId = 1;
 
     private void findNodeInfoViewById(final AccessibilityNodeInfo nodeInfo, final String id, String className) {
-        new Thread(() -> {
-//        if (!className.equals(this.lastClassName)) return;
-            List<AccessibilityNodeInfo> accessibilityNodeInfoList = nodeInfo.findAccessibilityNodeInfosByViewId(id);
-            if (accessibilityNodeInfoList.size() <= 0) {
-                XController.getInstance().getmHandler().postDelayed(() -> {
-                    if (countId <= 50) {
-                        findNodeInfoViewById(nodeInfo, id, className);
-                        countId++;
-                    } else {
-                        countId = 0;
-                    }
-                }, 100);
-            } else {
-                Log.e(TAG, "find id it!");
-                skipClick(accessibilityNodeInfoList);
-                countId = 0;
-            }
-        }).start();
+        List<AccessibilityNodeInfo> accessibilityNodeInfoList = nodeInfo.findAccessibilityNodeInfosByViewId(id);
+        if (accessibilityNodeInfoList.size() > 0) {
+            Log.e(TAG, "find id it!");
+            skipClick(accessibilityNodeInfoList);
+            countId = 0;
+        }
     }
 
     /**
@@ -343,20 +325,18 @@ public class SkipService extends AccessibilityService {
      * @param nodeInfoList
      */
     private void skipClick(List<AccessibilityNodeInfo> nodeInfoList) {
-        new Thread(() -> {
-            this.lastClassName = null;
-            boolean isClick = nodeInfoList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            Rect rect = new Rect();
-            nodeInfoList.get(0).getBoundsInScreen(rect);
+        this.lastClassName = null;
+        boolean isClick = nodeInfoList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        Rect rect = new Rect();
+        nodeInfoList.get(0).getBoundsInScreen(rect);
 //        Toast.makeText(getApplicationContext(), "跳过广告", Toast.LENGTH_SHORT).show();
-            if (ValueTools.build().getInt("jump_toast_switch") <= 0)
-                XController.getInstance().toastShow("跳过广告");
-            ValueTools.build().putInt("jumpCount", ValueTools.build().getInt("jumpCount") + 1);
+        if (ValueTools.build().getInt("jump_toast_switch") <= 0)
+            XController.getInstance().toastShow("跳过广告");
+        ValueTools.build().putInt("jumpCount", ValueTools.build().getInt("jumpCount") + 1);
 //        dispatchGesture(new GestureDescription())
-            if (!isClick) {
-                onTouch(rect);
-            }
-        }).start();
+        if (!isClick) {
+            onTouch(rect);
+        }
     }
 
 
