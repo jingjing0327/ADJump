@@ -15,11 +15,18 @@ import androidx.appcompat.app.ActionBar;
 
 import com.alibaba.fastjson.JSON;
 import com.lqcode.adjump.R;
+import com.lqcode.adjump.entity.Result;
+import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
+import com.lqcode.adjump.tools.ValueTools;
 import com.mob.MobSDK;
+
+import java.io.IOException;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class OldUserActivity extends BaseActivity {
 
@@ -49,9 +56,7 @@ public class OldUserActivity extends BaseActivity {
 
             } else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
                 if (result == SMSSDK.RESULT_COMPLETE) {
-                    XController.getInstance().toastShow("验证码输入正确");
-
-
+                    ValueTools.build().putString("vip", "1");
                 } else {
                     XController.getInstance().toastShow(JSON.parseObject(((Throwable) data).getMessage()).getString("description"));
                 }
@@ -77,8 +82,27 @@ public class OldUserActivity extends BaseActivity {
         EditText phoneNumber = findViewById(R.id.phone_number);
         sendMSM = findViewById(R.id.send_msm);
         sendMSM.setOnClickListener(view -> {
-            if (isSend)
-                new Thread(() -> SMSSDK.getVerificationCode("86", phoneNumber.getText().toString())).start();
+            if (isSend) {
+                new Thread(() -> {
+                    String phone = phoneNumber.getText().toString();
+                    Request judgeVIP = new Request.Builder()
+                            .url("https://api.lqcode.cn/autoSkip/judgeVIP/" + phone)
+                            .build();
+                    try {
+                        Response payInfoResponse = CacheTools.getInstance().getClient().newCall(judgeVIP).execute();
+                        String bodyMd5 = payInfoResponse.body().string();
+                        Result result = JSON.parseObject(bodyMd5, Result.class);
+                        if (result.getData() != null) {
+                            SMSSDK.getVerificationCode("86", phoneNumber.getText().toString());
+                        } else {
+                            XController.getInstance().toastShow("无" + phone + "的任何支付信息！");
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+            }
+
         });
         EditText checkMsm = findViewById(R.id.check_msm);
 

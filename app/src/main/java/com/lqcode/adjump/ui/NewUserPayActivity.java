@@ -77,8 +77,7 @@ public class NewUserPayActivity extends BaseActivity {
             try {
                 String phone = onePhone.getText().toString();
                 Request requestMd5 = new Request.Builder()
-//                        .url("https://api.lqcode.cn/pay/native/" + phone + "/alipay")
-                        .url("http://192.168.1.81:8082/pay/native/" + phone + "/alipay")
+                        .url("https://api.lqcode.cn/pay/native/" + phone + "/alipay")
                         .build();
                 Response payInfoResponse = CacheTools.getInstance().getClient().newCall(requestMd5).execute();
                 String bodyMd5 = payInfoResponse.body().string();
