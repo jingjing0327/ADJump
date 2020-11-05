@@ -57,6 +57,7 @@
         <activity android:name=".ui.VIPActivity" />
         <activity android:name=".ui.NewUserPayActivity" />
         <activity android:name=".ui.KeyVipActivity" />
+        <activity android:name=".ui.AliPayActivity" />
 
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"

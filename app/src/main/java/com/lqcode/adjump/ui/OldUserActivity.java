@@ -1,5 +1,7 @@
 package com.lqcode.adjump.ui;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -32,10 +34,24 @@ public class OldUserActivity extends BaseActivity {
             int result = msg.arg2;
             Object data = msg.obj;
             if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
-                XController.getInstance().toastShow(JSON.parseObject(((Throwable) data).getMessage()).getString("description"));
+                try {
+                    if (data.toString().equals("false")) {
+                        XController.getInstance().toastShow("发送成功");
+                        countDown();
+                    } else {
+                        Log.d(TAG, "handleMessage: " + data.toString());
+                        String xx = JSON.parseObject(((Throwable) data).getMessage()).getString("description");
+                        XController.getInstance().toastShow(xx);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             } else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
                 if (result == SMSSDK.RESULT_COMPLETE) {
                     XController.getInstance().toastShow("验证码输入正确");
+
+
                 } else {
                     XController.getInstance().toastShow(JSON.parseObject(((Throwable) data).getMessage()).getString("description"));
                 }
@@ -43,6 +59,8 @@ public class OldUserActivity extends BaseActivity {
         }
     };
     private EventHandler eh;
+    private Button sendMSM;
+    private boolean isSend = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,11 +75,43 @@ public class OldUserActivity extends BaseActivity {
         MobSDK.submitPolicyGrantResult(true, null);
         xx();
         EditText phoneNumber = findViewById(R.id.phone_number);
-        Button sendMSM = findViewById(R.id.send_msm);
-        sendMSM.setOnClickListener(view -> new Thread(() -> SMSSDK.getVerificationCode("86", phoneNumber.getText().toString())).start());
+        sendMSM = findViewById(R.id.send_msm);
+        sendMSM.setOnClickListener(view -> {
+            if (isSend)
+                new Thread(() -> SMSSDK.getVerificationCode("86", phoneNumber.getText().toString())).start();
+        });
         EditText checkMsm = findViewById(R.id.check_msm);
-        findViewById(R.id.check_msm_button).setOnClickListener(view -> SMSSDK.submitVerificationCode("86", phoneNumber.getText().toString(), checkMsm.getText().toString()));
+
+        Button checkMSMButton = findViewById(R.id.check_msm_button);
+
+        checkMSMButton.setOnClickListener(view -> {
+            SMSSDK.submitVerificationCode("86", phoneNumber.getText().toString(), checkMsm.getText().toString());
+        });
     }
+
+
+    int count = 0;
+
+    private void countDown() {
+        XController.getInstance().getmHandler().postDelayed(() -> {
+            ++count;
+            sendMSM.setText(count + "s");
+            sendMSM.setBackgroundColor(Color.parseColor("#C6C6C6"));
+            isSend = false;
+            if (count < 60) {
+                countDown();
+            } else {
+                count = 0;
+                isSend = true;
+                sendMSM.setText("重新发送");
+                sendMSM.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
+            }
+        }, 1000);
+
+
+    }
+
 
     /**
      *

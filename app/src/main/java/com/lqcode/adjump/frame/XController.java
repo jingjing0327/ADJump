@@ -47,9 +47,13 @@ public class XController {
      */
     public void toastShow(String text) {
         mHandler.post(() -> {
-            if (text != null) {
-                toastTV.setText(text);
-                toast.show();
+            try {
+                if (text != null) {
+                    toastTV.setText(text);
+                    toast.show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }

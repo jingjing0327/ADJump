@@ -168,12 +168,14 @@ public class SkipService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            this.lastPackageName = event.getPackageName().toString();
-            this.lastClassName = event.getClassName().toString();
-        }
+//        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+//            this.lastPackageName = event.getPackageName().toString();
+//            this.lastClassName = event.getClassName().toString();
+//        }
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
             try {
+                if (lastPackageName != null && lastPackageName == event.getPackageName()) return;
+                this.lastPackageName = event.getPackageName().toString();
 //                if (event.getClassName().toString().contains("android.widget.")) return;
                 if (event.getClassName().toString().contains("android.view.")) return;
                 Log.d(TAG, "onAccessibilityEvent: className==>>" + event.getClassName());
