@@ -8,12 +8,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -34,10 +34,19 @@ public class SettingActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         CacheTools.getInstance().setContext(this);
+
+        jumpToastSwitch.setChecked(ValueTools.build().getInt("jump_toast_switch") > 0);
+        jumpToastSwitch.setText(ValueTools.build().getInt("jump_toast_switch") > 0 ? "开" : "关");
+
+        weixinAutoLoginSwitch.setChecked(ValueTools.build().getInt("weixin_auto_login_switch") > 0);
+        weixinAutoLoginSwitch.setText(ValueTools.build().getInt("weixin_auto_login_switch") > 0 ? "开" : "关");
+
     }
 
     private MyAdapter myAdapter;
     List<PackageInfo> installedPackages = new ArrayList<>();
+    SwitchCompat jumpToastSwitch;
+    SwitchCompat weixinAutoLoginSwitch;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,22 +56,35 @@ public class SettingActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("设置");
         setSupportActionBar(toolbar);
-        SwitchCompat jumpToastSwitch = findViewById(R.id.jump_toast_switch);
-        SwitchCompat weixinAutoLoginSwitch = findViewById(R.id.weixin_auto_login_switch);
-        jumpToastSwitch.setChecked(ValueTools.build().getInt("jump_toast_switch") > 0);
-        jumpToastSwitch.setText(ValueTools.build().getInt("jump_toast_switch") > 0 ? "开" : "关");
+        jumpToastSwitch = findViewById(R.id.jump_toast_switch);
+        weixinAutoLoginSwitch = findViewById(R.id.weixin_auto_login_switch);
 
-        weixinAutoLoginSwitch.setChecked(ValueTools.build().getInt("weixin_auto_login_switch") > 0);
+
+        jumpToastSwitch.setOnClickListener(view -> {
+            if (ValueTools.build().getInt("vip") != 1) {
+                startActivity(new Intent(SettingActivity.this, VIPActivity.class));
+            }
+        });
+
+        weixinAutoLoginSwitch.setOnClickListener(view -> {
+            if (ValueTools.build().getInt("vip") != 1) {
+                startActivity(new Intent(SettingActivity.this, VIPActivity.class));
+            }
+        });
+
         jumpToastSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
-            ValueTools.build().putInt("jump_toast_switch", b ? 1 : 0);
-            jumpToastSwitch.setText(ValueTools.build().getInt("jump_toast_switch") > 0 ? "开" : "关");
-
+            if (ValueTools.build().getInt("vip") == 1) {
+                ValueTools.build().putInt("jump_toast_switch", b ? 1 : 0);
+                jumpToastSwitch.setText(ValueTools.build().getInt("jump_toast_switch") > 0 ? "开" : "关");
+            }
         });
         weixinAutoLoginSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
-            ValueTools.build().putInt("weixin_auto_login_switch", b ? 1 : 0);
-            weixinAutoLoginSwitch.setText(ValueTools.build().getInt("weixin_auto_login_switch") > 0 ? "开" : "关");
+            if (ValueTools.build().getInt("vip") == 1) {
+                ValueTools.build().putInt("weixin_auto_login_switch", b ? 1 : 0);
+                weixinAutoLoginSwitch.setText(ValueTools.build().getInt("weixin_auto_login_switch") > 0 ? "开" : "关");
+            }
         });
-        weixinAutoLoginSwitch.setText(ValueTools.build().getInt("weixin_auto_login_switch") > 0 ? "开" : "关");
+
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -76,6 +98,7 @@ public class SettingActivity extends BaseActivity {
         myAdapter.notifyDataSetChanged();
 
     }
+
 
     /**
      *

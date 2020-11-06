@@ -12,7 +12,7 @@ import androidx.appcompat.app.ActionBar;
 
 import com.lqcode.adjump.R;
 
-public class AliPayActivity extends BaseActivity {
+public class AlipayActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

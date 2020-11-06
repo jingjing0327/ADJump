@@ -2,13 +2,13 @@ package com.lqcode.adjump.tools;
 
 import android.os.Environment;
 import android.util.Log;
+import android.widget.EditText;
 
-import com.alibaba.fastjson.JSON;
-import com.lqcode.adjump.entity.NetApps;
 import com.lqcode.adjump.entity.Result;
 import com.lqcode.adjump.entity.db.DBAppConfig;
 import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
+import com.lqcode.adjump.frame.net.ApiController;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,11 +18,17 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import okhttp3.Request;
-import okhttp3.Response;
+import retrofit2.Call;
 
 public class Tools {
     private static final String TAG = Tools.class.getSimpleName();
+
+
+    public static void editFocus(EditText editText) {
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
+    }
 
     public static String getDeviceId() {
         String deviceId = ValueTools.build().getString("deviceId");
@@ -58,35 +64,30 @@ public class Tools {
      */
     public static void getNewApps() {
         try {
-            //
-            if (CacheTools.getInstance().getApps() == null || CacheTools.getInstance().getApps().size() <= 0)
-                ValueTools.build().putString("appConfigMd5", UUID.randomUUID().toString());
-            //
-            Request requestMd5 = new Request.Builder()
-                    .url("https://api.lqcode.cn/autoSkip/md5")
-                    .build();
-            Response responseMd5 = CacheTools.getInstance().getClient().newCall(requestMd5).execute();
-            String bodyMd5 = responseMd5.body().string();
-            Result resultMd5 = JSON.parseObject(bodyMd5, Result.class);
+            Call<Result<String>> md5Call = ApiController.getService().getMd5();
+            retrofit2.Response<Result<String>> resultResponse = md5Call.execute();
+            Result<String> md5Result = resultResponse.body();
+            if (md5Result == null) return;
+            Log.d(TAG, "getNewApps: " + md5Result.getData());
             String md5 = ValueTools.build().getString("appConfigMd5");
-            if (md5 != null) if (md5.equals(resultMd5.getData().toString())) return;
-            Request request = new Request.Builder()
-                    .url("https://api.lqcode.cn/autoSkip/get")
-                    .build();
-            Response response = CacheTools.getInstance().getClient().newCall(request).execute();
-            String result = response.body().string();
-            NetApps app = JSON.parseObject(result, NetApps.class);
+            if (md5 != null) if (md5.equals(md5Result.getData())) return;
+
+            Call<Result<Map<String, String>>> appConfigCall = ApiController.getService().getAppConfig();
+            retrofit2.Response<Result<Map<String, String>>> resultAppConfig = appConfigCall.execute();
+            Result<Map<String, String>> appConfigResult = resultAppConfig.body();
+
+            if (appConfigResult == null) return;
             XController.getInstance().getDb().appConfigDao().delAll();
-            for (String key : app.getData().keySet()) {
-                String value = app.getData().get(key);
+            for (String key : appConfigResult.getData().keySet()) {
+                String value = appConfigResult.getData().get(key);
                 DBAppConfig appConfig = new DBAppConfig();
                 appConfig.setButtonName(value);
                 appConfig.setPackageActivity(key);
                 XController.getInstance().getDb().appConfigDao().addAppConfig(appConfig);
             }
             Log.d(TAG, "getApps: " + XController.getInstance().getDb().appConfigDao().getAll());
-            CacheTools.getInstance().setApps(app.getData());
-            ValueTools.build().putString("appConfigMd5", resultMd5.getData().toString());
+            CacheTools.getInstance().setApps(appConfigResult.getData());
+            ValueTools.build().putString("appConfigMd5", md5Result.getData().toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

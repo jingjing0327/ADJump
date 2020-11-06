@@ -175,8 +175,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/setting_tv" />
 
+
         <TextView
-            android:id="@+id/test_tv"
+            android:id="@+id/vip_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/about_tv"
@@ -184,12 +185,23 @@
             android:background="@drawable/ripple_backgroud"
             android:gravity="center_vertical"
             android:padding="15dp"
-            android:text="test"
+            android:text="          VIP高级用户"
             android:textColor="#000000"
             android:textSize="16sp"
             app:drawableRightCompat="@mipmap/back"
             app:layout_constraintTop_toBottomOf="@+id/about_tv"
             tools:layout_editor_absoluteX="0dp" />
+
+        <ImageView
+            android:id="@+id/vip_iv"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="30dp"
+            android:src="@mipmap/main_vip"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/about_tv" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

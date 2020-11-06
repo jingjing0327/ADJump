@@ -1,6 +1,5 @@
 package com.lqcode.adjump.ui;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,8 +15,9 @@ import androidx.appcompat.app.ActionBar;
 import com.alibaba.fastjson.JSON;
 import com.lqcode.adjump.R;
 import com.lqcode.adjump.entity.Result;
-import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
+import com.lqcode.adjump.frame.net.ApiController;
+import com.lqcode.adjump.tools.Tools;
 import com.lqcode.adjump.tools.ValueTools;
 import com.mob.MobSDK;
 
@@ -25,8 +25,7 @@ import java.io.IOException;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
-import okhttp3.Request;
-import okhttp3.Response;
+import retrofit2.Call;
 
 public class OldUserActivity extends BaseActivity {
 
@@ -56,7 +55,9 @@ public class OldUserActivity extends BaseActivity {
 
             } else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
                 if (result == SMSSDK.RESULT_COMPLETE) {
-                    ValueTools.build().putString("vip", "1");
+                    ValueTools.build().putInt("vip", 1);
+                    XController.getInstance().toastShow("欢迎回来，亲爱的VIP用户");
+                    finish();
                 } else {
                     XController.getInstance().toastShow(JSON.parseObject(((Throwable) data).getMessage()).getString("description"));
                 }
@@ -83,16 +84,21 @@ public class OldUserActivity extends BaseActivity {
         sendMSM = findViewById(R.id.send_msm);
         sendMSM.setOnClickListener(view -> {
             if (isSend) {
+                String phone = phoneNumber.getText().toString();
+                if (phone.length() != 11) {
+                    phoneNumber.setError("手机号不正确");
+                    Tools.editFocus(phoneNumber);
+                    return;
+                }
                 new Thread(() -> {
-                    String phone = phoneNumber.getText().toString();
-                    Request judgeVIP = new Request.Builder()
-                            .url("https://api.lqcode.cn/autoSkip/judgeVIP/" + phone)
-                            .build();
                     try {
-                        Response payInfoResponse = CacheTools.getInstance().getClient().newCall(judgeVIP).execute();
-                        String bodyMd5 = payInfoResponse.body().string();
-                        Result result = JSON.parseObject(bodyMd5, Result.class);
-                        if (result.getData() != null) {
+                        Call<Result<Object>> judgeVIPCall = ApiController.getService().judgeVIP(phone);
+                        retrofit2.Response<Result<Object>> resultResponse = judgeVIPCall.execute();
+                        Result<Object> resultVIP = resultResponse.body();
+
+                        if (resultVIP == null) return;
+
+                        if (resultVIP.getData() != null) {
                             SMSSDK.getVerificationCode("86", phoneNumber.getText().toString());
                         } else {
                             XController.getInstance().toastShow("无" + phone + "的任何支付信息！");
@@ -102,7 +108,6 @@ public class OldUserActivity extends BaseActivity {
                     }
                 }).start();
             }
-
         });
         EditText checkMsm = findViewById(R.id.check_msm);
 
@@ -129,11 +134,8 @@ public class OldUserActivity extends BaseActivity {
                 isSend = true;
                 sendMSM.setText("重新发送");
                 sendMSM.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-
             }
         }, 1000);
-
-
     }
 
 

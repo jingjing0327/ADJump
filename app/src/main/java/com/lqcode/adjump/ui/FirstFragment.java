@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.SwitchCompat;
@@ -23,7 +24,20 @@ public class FirstFragment extends Fragment {
     private Intent intent;
     private SwitchCompat serviceSwitch;
     private TextView jumpCount;
+    private TextView vipTV;
+    private ImageView vipIV;
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (ValueTools.build().getInt("vip") == 1) {
+            vipTV.setVisibility(View.VISIBLE);
+            vipIV.setVisibility(View.VISIBLE);
+        } else {
+            vipTV.setVisibility(View.GONE);
+            vipIV.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,13 +61,15 @@ public class FirstFragment extends Fragment {
             }
         });
 
-        TextView   serviceText = rootView.findViewById(R.id.service_text);
+        TextView serviceText = rootView.findViewById(R.id.service_text);
         serviceText.setText(serviceSwitch.isChecked() ? "服务正在运行" : "服务未开启，点击开启服务");
         jumpCount = rootView.findViewById(R.id.jump_count);
         rootView.findViewById(R.id.setting_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), SettingActivity.class)));
         rootView.findViewById(R.id.about_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), AboutActivity.class)));
-        rootView.findViewById(R.id.test_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), VIPActivity.class)));
+        rootView.findViewById(R.id.vip_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), VIPActivity.class)));
         rootView.findViewById(R.id.custom_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), CustomActivity.class)));
+        vipTV = rootView.findViewById(R.id.vip_tv);
+        vipIV = rootView.findViewById(R.id.vip_iv);
 
         return rootView;
     }
