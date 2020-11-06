@@ -54,7 +54,7 @@ public class Tools {
                 map.put(config.getPackageActivity(), config.getButtonName());
             }
             CacheTools.getInstance().setApps(map);
-            Log.d(TAG, "setCacheAppsConfig: " + CacheTools.getInstance().getApps().toString());
+//            Log.d(TAG, "setCacheAppsConfig: " + CacheTools.getInstance().getApps().toString());
             getNewApps();
         }).start();
     }
@@ -68,7 +68,7 @@ public class Tools {
             retrofit2.Response<Result<String>> resultResponse = md5Call.execute();
             Result<String> md5Result = resultResponse.body();
             if (md5Result == null) return;
-            Log.d(TAG, "getNewApps: " + md5Result.getData());
+//            Log.d(TAG, "getNewApps: " + md5Result.getData());
             String md5 = ValueTools.build().getString("appConfigMd5");
             if (md5 != null) if (md5.equals(md5Result.getData())) return;
 
@@ -85,7 +85,7 @@ public class Tools {
                 appConfig.setPackageActivity(key);
                 XController.getInstance().getDb().appConfigDao().addAppConfig(appConfig);
             }
-            Log.d(TAG, "getApps: " + XController.getInstance().getDb().appConfigDao().getAll());
+//            Log.d(TAG, "getApps: " + XController.getInstance().getDb().appConfigDao().getAll());
             CacheTools.getInstance().setApps(appConfigResult.getData());
             ValueTools.build().putString("appConfigMd5", md5Result.getData().toString());
         } catch (Exception e) {

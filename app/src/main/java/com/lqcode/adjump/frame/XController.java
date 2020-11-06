@@ -32,6 +32,7 @@ public class XController {
                 CacheTools.getInstance().getContext(),
                 AppDatabase.class,
                 "ADJump")
+                .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build();
     }
