@@ -241,9 +241,12 @@ public class SkipService extends AccessibilityService {
             CharSequence text = findNodeInfo.getText();
             if (text.length() <= 10) {
                 text = text.toString().replace(" ", "");
-                String pattern = "^[0-9]跳过[\\s\\S]*";
-                String pattern002 = "^跳过[\\s\\S]*";
-                if (Pattern.matches(pattern, text) || Pattern.matches(pattern002, text)) {
+
+                String pattern = "^[0-9]跳过.*";
+                String pattern002 = "^跳过[\\s\\S]{0,5}";
+                String pattern003 = "^[0-9]s跳过.*";
+                String pattern004 = "^[0-9]秒跳过.*";
+                if (Pattern.matches(pattern, text) || Pattern.matches(pattern002, text)|| Pattern.matches(pattern003, text)|| Pattern.matches(pattern004, text)) {
                     Log.d(TAG, "findJumpText: " + className + "---" + packageName);
                     skipClick(accessibilityNodeInfoList);
                     addAutoJumpDB(findNodeInfo, className);

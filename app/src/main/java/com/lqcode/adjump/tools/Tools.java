@@ -95,9 +95,9 @@ public class Tools {
     }
 
     public static void main(String[] args) {
-        String text = "跳过广告 | 5";
+        String text = "1跳过";
         text = text.toString().replace(" ", "");
-        String pattern = "^[0-9]跳过";
+        String pattern = "^([0-9]|秒|s|S)跳过[\\s\\S]*";
         String pattern002 = "^跳过";
         boolean isMatches = Pattern.matches(pattern, text);
         boolean isMatches002 = Pattern.matches(pattern002, text);
