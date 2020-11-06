@@ -175,7 +175,8 @@ public class SkipService extends AccessibilityService {
 //        }
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
             try {
-                if(event.getPackageName().toString().equals("com.android.systemui"))return;
+                if (event.getPackageName().toString().equals("com.android.systemui")) return;
+                if (event.getClassName().toString().contains("android.view.")) return;
                 if (lastPackageName == null) {
                     Log.d(TAG, "onAccessibilityEvent: 1111111111111111");
                     this.lastPackageName = event.getPackageName().toString();
@@ -190,11 +191,8 @@ public class SkipService extends AccessibilityService {
                         this.lastPackageName = event.getPackageName().toString();
                         this.lastTime = System.currentTimeMillis();
                     }
-
-
                 }
 //                if (event.getClassName().toString().contains("android.widget.")) return;
-                if (event.getClassName().toString().contains("android.view.")) return;
                 Log.d(TAG, "onAccessibilityEvent: lastPackageName==>>" + this.lastPackageName);
 //                if (!event.getClassName().equals(this.lastClassName)) return;
 
