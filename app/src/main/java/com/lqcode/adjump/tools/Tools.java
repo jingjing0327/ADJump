@@ -49,12 +49,18 @@ public class Tools {
     public static void setCacheAppsConfig() {
         new Thread(() -> {
             List<DBAppConfig> dbAppConfigList = XController.getInstance().getDb().appConfigDao().getAll();
+            if (dbAppConfigList.size() <= 0) {
+                getNewApps();
+                return;
+            }
+            if (dbAppConfigList.size() == CacheTools.getInstance().getApps().size())
+                return;
             Map<String, String> map = new HashMap<>();
             for (DBAppConfig config : dbAppConfigList) {
                 map.put(config.getPackageActivity(), config.getButtonName());
             }
             CacheTools.getInstance().setApps(map);
-//            Log.d(TAG, "setCacheAppsConfig: " + CacheTools.getInstance().getApps().toString());
+            Log.d(TAG, "setCacheAppsConfig: " + CacheTools.getInstance().getApps().toString());
             getNewApps();
         }).start();
     }
@@ -68,8 +74,8 @@ public class Tools {
             retrofit2.Response<Result<String>> resultResponse = md5Call.execute();
             Result<String> md5Result = resultResponse.body();
             if (md5Result == null) return;
-//            Log.d(TAG, "getNewApps: " + md5Result.getData());
             String md5 = ValueTools.build().getString("appConfigMd5");
+            if (CacheTools.getInstance().getApps().size() <= 0) md5 = UUID.randomUUID().toString();
             if (md5 != null) if (md5.equals(md5Result.getData())) return;
 
             Call<Result<Map<String, String>>> appConfigCall = ApiController.getService().getAppConfig();
@@ -85,7 +91,7 @@ public class Tools {
                 appConfig.setPackageActivity(key);
                 XController.getInstance().getDb().appConfigDao().addAppConfig(appConfig);
             }
-//            Log.d(TAG, "getApps: " + XController.getInstance().getDb().appConfigDao().getAll());
+            Log.d(TAG, "getApps: " + XController.getInstance().getDb().appConfigDao().getAll());
             CacheTools.getInstance().setApps(appConfigResult.getData());
             ValueTools.build().putString("appConfigMd5", md5Result.getData().toString());
         } catch (Exception e) {

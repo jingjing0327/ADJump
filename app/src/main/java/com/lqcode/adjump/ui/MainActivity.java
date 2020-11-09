@@ -1,6 +1,7 @@
 package com.lqcode.adjump.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,19 +18,28 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         CacheTools.getInstance().setContext(this);
         XController.getInstance();
-
-        Tools.setCacheAppsConfig();
-        Tools.getDeviceId();
-
     }
 
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart: ");
+        super.onStart();
+        Tools.setCacheAppsConfig();
+        Tools.getDeviceId();
+    }
 
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume: ");
+        super.onResume();
+    }
 
     //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {

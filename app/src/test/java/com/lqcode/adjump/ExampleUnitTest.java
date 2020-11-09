@@ -19,7 +19,7 @@ public class ExampleUnitTest {
 
     @Test
     public void main() {
-        String text = "跳过1132";
+        String text = "跳过";
         text = text.toString().replace(" ", "");
         String pattern = "^[0-9]跳过.*";
         String pattern003 = "^[0-9]s跳过.*";

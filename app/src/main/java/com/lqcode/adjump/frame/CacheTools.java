@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
@@ -22,7 +23,7 @@ public class CacheTools {
     private int width;
     private int height;
     private boolean isStartScreen;
-    private Map<String, String> apps;
+    private Map<String, String> apps=new HashMap<>();
     private Context context;
     private OkHttpClient client;
 
@@ -49,7 +50,8 @@ public class CacheTools {
     }
 
     public void setApps(Map<String, String> apps) {
-        this.apps = apps;
+        this.apps.clear();
+        this.apps.putAll(apps);
     }
 
     public boolean isStartScreen() {

@@ -169,44 +169,56 @@ public class SkipService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-//        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-//            this.lastPackageName = event.getPackageName().toString();
-//            this.lastClassName = event.getClassName().toString();
+        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            Log.d(TAG, "onAccessibilityEvent: TYPE_WINDOW_STATE_CHANGED");
+            this.lastPackageName = event.getPackageName().toString();
+            this.lastClassName = event.getClassName().toString();
+            String key = this.lastPackageName + "-" + this.lastClassName;
+            Log.d(TAG, "onAccessibilityEvent: TYPE_WINDOW_STATE_CHANGED===>" + key);
+            if (CacheTools.getInstance().getApps() != null && CacheTools.getInstance().getApps().containsKey(key)) {
+                AccessibilityNodeInfo nodeInfo = event.getSource();
+                XController.getInstance().getmHandler().postDelayed(() -> {
+                    Log.d(TAG, "onAccessibilityEvent: 内存有id---" + key);
+                    if (nodeInfo == null) return;
+                    String ids = CacheTools.getInstance().getApps().get(key);
+                    if (ids == null) return;
+                    if (ids.length() == 0) return;
+                    skip(ids, nodeInfo, this.lastClassName, this.lastPackageName);
+                }, 1000);
+
+            }
+        }
+//        if(event.getEventType()==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED){TYPE_WINDOW_CONTENT_CHANGED
+//            Log.d(TAG, "onAccessibilityEvent: TYPE_WINDOWS_CHANGED===>"+event.getPackageName());
 //        }
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
             try {
-                if (event.getPackageName().toString().equals("com.android.systemui")) return;
+                String pattern = "^com.android.*";
+                if (Pattern.matches(pattern, event.getPackageName().toString())) return;
+
+                if (event.getPackageName().toString().equals("android")) return;
                 if (event.getClassName().toString().contains("android.view.")) return;
                 if (lastPackageName == null) {
-                    Log.d(TAG, "onAccessibilityEvent: 1111111111111111");
                     this.lastPackageName = event.getPackageName().toString();
                     this.lastTime = System.currentTimeMillis();
                 } else {
-                    Log.d(TAG, "onAccessibilityEvent: 2222222222" + this.lastPackageName + "-------" + event.getPackageName());
-                    Log.d(TAG, "onAccessibilityEvent: " + (System.currentTimeMillis() - lastTime));
                     if (this.lastPackageName.equals(event.getPackageName().toString())) {
-                        if (System.currentTimeMillis() - lastTime >= 3000)
+                        if (System.currentTimeMillis() - lastTime >= 3000) {
+                            Log.d(TAG, "onAccessibilityEvent: 不执行...");
                             return;
+                        }
                     } else {
                         this.lastPackageName = event.getPackageName().toString();
                         this.lastTime = System.currentTimeMillis();
+                        Log.d(TAG, "onAccessibilityEvent: " + this.lastPackageName + "新开启应用...重置时间");
                     }
                 }
-//                if (event.getClassName().toString().contains("android.widget.")) return;
-                Log.d(TAG, "onAccessibilityEvent: lastPackageName==>>" + this.lastPackageName);
-//                if (!event.getClassName().equals(this.lastClassName)) return;
-
                 int count = XController.getInstance().getDb().whileAppConfigDao().getCountByPackage(SkipService.this.lastPackageName);
                 if (count > 0) return;
 
-                String key = event.getPackageName() + "-" + event.getClassName();
+                String key = this.lastPackageName + "-" + this.lastClassName;
+                Log.d(TAG, "onAccessibilityEvent: key==>" + key);
                 customAppSkipPosition(key);
-
-                if (CacheTools.getInstance().getApps() == null)
-                    Tools.setCacheAppsConfig();
-
-                if (CacheTools.getInstance().getApps() != null && CacheTools.getInstance().getApps().size() <= 0)
-                    Tools.setCacheAppsConfig();
 
                 if (CacheTools.getInstance().getApps() != null && CacheTools.getInstance().getApps().containsKey(key)) {
                     AccessibilityNodeInfo nodeInfo = event.getSource();
@@ -214,13 +226,13 @@ public class SkipService extends AccessibilityService {
                     String ids = CacheTools.getInstance().getApps().get(key);
                     if (ids == null) return;
                     if (ids.length() == 0) return;
-                    skip(ids, nodeInfo, event.getClassName().toString(), event.getPackageName().toString());
+                    skip(ids, nodeInfo, this.lastClassName, this.lastPackageName);
                 }
 
                 if (isDebug) {
                     AccessibilityNodeInfo nodeInfo = event.getSource();
                     if (nodeInfo == null) return;
-                    findJumpText(nodeInfo, event.getClassName().toString(), event.getPackageName().toString());
+                    findJumpText(nodeInfo, this.lastClassName, this.lastPackageName);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -249,10 +261,8 @@ public class SkipService extends AccessibilityService {
     /**
      * @param nodeInfo
      */
-    private int textCount = 0;
 
     private void findJumpText(AccessibilityNodeInfo nodeInfo, String className, String packageName) {
-//        Log.d(TAG, "findJumpText: -------------------" + className);
         List<AccessibilityNodeInfo> accessibilityNodeInfoList = nodeInfo.findAccessibilityNodeInfosByText("跳过");
         if (accessibilityNodeInfoList.size() > 0) {
             AccessibilityNodeInfo findNodeInfo = accessibilityNodeInfoList.get(0);
@@ -265,12 +275,13 @@ public class SkipService extends AccessibilityService {
                 String pattern003 = "^[0-9]s跳过.*";
                 String pattern004 = "^[0-9]秒跳过.*";
                 if (Pattern.matches(pattern, text) || Pattern.matches(pattern002, text) || Pattern.matches(pattern003, text) || Pattern.matches(pattern004, text)) {
-                    Log.d(TAG, "findJumpText: " + className + "---" + packageName);
+                    Log.d(TAG, "找到了跳过--findJumpText: " + className + "---" + packageName);
                     skipClick(accessibilityNodeInfoList);
                     addAutoJumpDB(findNodeInfo, className);
                 }
             }
-            textCount = 0;
+        } else {
+            Log.d(TAG, "findJumpText: 找不到跳過");
         }
     }
 
