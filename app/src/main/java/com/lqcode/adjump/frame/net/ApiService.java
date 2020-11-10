@@ -7,6 +7,7 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface ApiService {
@@ -23,6 +24,9 @@ public interface ApiService {
 
     @GET("autoSkip/judgeVIP/{phone}")
     Call<Result<Object>> judgeVIP(@Path("phone") String phone);
+
+    @POST("pay/activationKey/{phone}/{codeKey}")
+    Call<Result<Integer>> activationKey(@Path("phone") String phone, @Path("codeKey") String codeKey);
 
 
 }

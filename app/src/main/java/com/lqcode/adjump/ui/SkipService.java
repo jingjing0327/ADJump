@@ -177,15 +177,12 @@ public class SkipService extends AccessibilityService {
             Log.d(TAG, "onAccessibilityEvent: TYPE_WINDOW_STATE_CHANGED===>" + key);
             if (CacheTools.getInstance().getApps() != null && CacheTools.getInstance().getApps().containsKey(key)) {
                 AccessibilityNodeInfo nodeInfo = event.getSource();
-                XController.getInstance().getmHandler().postDelayed(() -> {
-                    Log.d(TAG, "onAccessibilityEvent: 内存有id---" + key);
-                    if (nodeInfo == null) return;
-                    String ids = CacheTools.getInstance().getApps().get(key);
-                    if (ids == null) return;
-                    if (ids.length() == 0) return;
-                    skip(ids, nodeInfo, this.lastClassName, this.lastPackageName);
-                }, 1000);
-
+                Log.d(TAG, "onAccessibilityEvent: 内存有id---" + key);
+                if (nodeInfo == null) return;
+                String ids = CacheTools.getInstance().getApps().get(key);
+                if (ids == null) return;
+                if (ids.length() == 0) return;
+                skip(ids, nodeInfo, this.lastClassName, this.lastPackageName);
             }
         }
 //        if(event.getEventType()==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED){TYPE_WINDOW_CONTENT_CHANGED
@@ -332,13 +329,24 @@ public class SkipService extends AccessibilityService {
     int countId = 1;
 
     private void findNodeInfoViewById(final AccessibilityNodeInfo nodeInfo, final String id, String className) {
+//        if (!className.equals(this.lastClassName)) return;
         List<AccessibilityNodeInfo> accessibilityNodeInfoList = nodeInfo.findAccessibilityNodeInfosByViewId(id);
-        if (accessibilityNodeInfoList.size() > 0) {
+        if (accessibilityNodeInfoList.size() <= 0) {
+            XController.getInstance().getmHandler().postDelayed(() -> {
+                if (countId <= 30) {
+                    findNodeInfoViewById(nodeInfo, id, className);
+                    countId++;
+                } else {
+                    countId = 0;
+                }
+            }, 100);
+        } else {
             Log.e(TAG, "find id it!");
             skipClick(accessibilityNodeInfoList);
             countId = 0;
         }
     }
+
 
     /**
      * @param ids

@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/edit_key"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_marginLeft="20dp"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextPhone3"
+        android:id="@+id/edit_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_key" />
 
     <Button
         android:id="@+id/button2"
@@ -48,5 +48,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPhone3" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_phone" />
 </androidx.constraintlayout.widget.ConstraintLayout>
