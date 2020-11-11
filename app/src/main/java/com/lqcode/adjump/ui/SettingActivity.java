@@ -94,6 +94,13 @@ public class SettingActivity extends BaseActivity {
 
         PackageManager pm = getPackageManager();
         List<PackageInfo> temp = pm.getInstalledPackages(0);
+        List<PackageInfo> tempRemove = new ArrayList<>();
+        for (PackageInfo packageInfo : temp) {
+            if (packageInfo.packageName.contains("com.android.")) {
+                tempRemove.add(packageInfo);
+            }
+        }
+        temp.removeAll(tempRemove);
         installedPackages.addAll(temp);
         myAdapter.notifyDataSetChanged();
 
