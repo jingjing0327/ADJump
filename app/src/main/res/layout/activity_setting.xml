@@ -1,33 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
         android:id="@+id/toast_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/app_bar_layout"
-        android:layout_marginTop="10dp"
         android:background="@android:color/white"
         android:gravity="center_vertical"
-        android:padding="15dp">
+        android:padding="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/vip"
@@ -57,15 +44,18 @@
             android:text="开" />
     </RelativeLayout>
 
+
     <RelativeLayout
         android:id="@+id/weixin_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toast_layout"
-        android:layout_marginTop="10dp"
         android:background="@android:color/white"
         android:gravity="center_vertical"
-        android:padding="15dp">
+        android:padding="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toast_layout">
 
         <ImageView
             android:id="@+id/vip_002"
@@ -94,7 +84,6 @@
             android:text="开" />
     </RelativeLayout>
 
-
     <RelativeLayout
         android:id="@+id/share_rules_layout"
         android:layout_width="wrap_content"
@@ -103,7 +92,11 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/white"
         android:gravity="center_vertical"
-        android:padding="15dp">
+        android:padding="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weixin_layout">
 
 
         <TextView
@@ -129,9 +122,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/share_rules_layout"
-        android:layout_marginTop="10dp" />
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/share_rules_layout" />
 
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

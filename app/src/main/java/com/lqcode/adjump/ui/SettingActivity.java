@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -53,9 +54,19 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         CacheTools.getInstance().setContext(this);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("设置");
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        toolbar.setTitle("设置");
+//        toolbar.setNavigationIcon(R.mipmap.back);
+//        toolbar.setNavigationOnClickListener(view -> SettingActivity.this.finish());
+
+//        setSupportActionBar(toolbar);
+
+
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("设置");
+
         jumpToastSwitch = findViewById(R.id.jump_toast_switch);
         weixinAutoLoginSwitch = findViewById(R.id.weixin_auto_login_switch);
 

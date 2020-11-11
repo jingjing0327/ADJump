@@ -9,7 +9,6 @@ import android.widget.RadioGroup;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 
-import com.alibaba.fastjson.JSON;
 import com.lqcode.adjump.R;
 import com.lqcode.adjump.entity.PayEntity;
 import com.lqcode.adjump.entity.Result;
@@ -23,6 +22,8 @@ import retrofit2.Call;
 public class NewUserPayActivity extends BaseActivity {
     EditText onePhone;
     private static final String TAG = NewUserPayActivity.class.getName();
+    private RadioButton zhifubaoRB;
+    private RadioButton weixinRB;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,8 +40,8 @@ public class NewUserPayActivity extends BaseActivity {
 
         RadioGroup radioGroup = findViewById(R.id.pay_radio_group);
 
-        RadioButton zhifubaoRB = findViewById(R.id.zhifubao);
-        RadioButton weixinRB = findViewById(R.id.weixin);
+        zhifubaoRB = findViewById(R.id.zhifubao);
+        weixinRB = findViewById(R.id.weixin);
 
 
         findViewById(R.id.zhifubao_layout).setOnClickListener(view -> radioGroup.check(R.id.zhifubao));
@@ -80,27 +81,26 @@ public class NewUserPayActivity extends BaseActivity {
         });
     }
 
-    /**
-     * @param editText
-     */
-
 
     /**
      *
      */
     private void getPayInfo() {
+        boolean isZhifubao = zhifubaoRB.isChecked();
         new Thread(() -> {
             try {
                 String phone = onePhone.getText().toString();
-                Call<Result<PayEntity>> payCall = ApiController.getService().alipay(phone);
+                Call<Result<PayEntity>> payCall = ApiController.getService().payInfo(phone, isZhifubao ? "alipay" : "wechat");
                 retrofit2.Response<Result<PayEntity>> payResponse = payCall.execute();
                 Result<PayEntity> result = payResponse.body();
                 if (result == null) return;
                 if (result.getStatus() == 200) {
-                    Object object = result.getData();
-                    PayEntity payEntity = JSON.parseObject(object.toString(), PayEntity.class);
-                    String codeUrl = payEntity.getCodeUrl();
-                    Intent intent = new Intent(NewUserPayActivity.this, AlipayActivity.class);
+                    String codeUrl = result.getData().getCodeUrl();
+                    Intent intent;
+                    if (isZhifubao)
+                        intent = new Intent(NewUserPayActivity.this, AlipayActivity.class);
+                    else
+                        intent = new Intent(NewUserPayActivity.this, WechatPayActivity.class);
                     intent.putExtra("url", codeUrl);
                     startActivity(intent);
                 } else {

@@ -19,8 +19,9 @@ public interface ApiService {
     @GET("autoSkip/get")
     Call<Result<Map<String, String>>> getAppConfig();
 
-    @GET("pay/native/{phone}/alipay")
-    Call<Result<PayEntity>> alipay(@Path("phone") String phone);
+    @GET("pay/native/{phone}/{type}")
+    Call<Result<PayEntity>> payInfo(@Path("phone") String phone, @Path("type") String type);
+
 
     @GET("autoSkip/judgeVIP/{phone}")
     Call<Result<Object>> judgeVIP(@Path("phone") String phone);
