@@ -7,7 +7,7 @@
     android:canRequestEnhancedWebAccessibility="true"
     android:canRequestFilterKeyEvents="true"
     android:canRetrieveWindowContent="true"
-    android:description="@string/app_name"
+    android:description="@string/app_name_info"
     android:notificationTimeout="0"/>
 
 
