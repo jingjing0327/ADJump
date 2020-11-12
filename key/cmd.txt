@@ -1,4 +1,4 @@
-jarsigner -verbose -keystore lqcode_player.jks -signedjar signed.apk app-release.apk lqcode
+jarsigner -verbose -keystore lqcode_player.jks -signedjar signed.apk app-release-unsigned.apk lqcode
 
 
 asdfg12345
