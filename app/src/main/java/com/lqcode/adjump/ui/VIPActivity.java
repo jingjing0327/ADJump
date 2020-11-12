@@ -27,7 +27,7 @@ public class VIPActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("购买VIP");
+        actionBar.setTitle("VIP");
         newUserBtn = findViewById(R.id.new_user_btn);
         newUserBtn.setOnClickListener(view -> startActivity(new Intent(VIPActivity.this, NewUserPayActivity.class)));
 

@@ -7,12 +7,14 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 
 import com.lqcode.adjump.R;
+import com.lqcode.adjump.tools.ValueTools;
 import com.tencent.bugly.beta.Beta;
 
 import java.util.List;
@@ -38,11 +40,11 @@ public class AboutActivity extends BaseActivity {
         }
         String version = info.versionName;
         versionTV.setText("检查版本号   " + version);
-        versionTV.setOnClickListener(view -> {
-            Beta.checkUpgrade();
-            Log.d("123", "onCreate: 777777777777");
-        });
-        findViewById(R.id.contact).setOnClickListener(view -> customerService());
+        findViewById(R.id.version_layout).setOnClickListener(view -> Beta.checkUpgrade());
+        findViewById(R.id.contact_layout).setOnClickListener(view -> customerService());
+        View payLayout = findViewById(R.id.pay_layout);
+        payLayout.setOnClickListener(view -> startActivity(new Intent(AboutActivity.this, VIPActivity.class)));
+        payLayout.setVisibility(ValueTools.build().getInt("vip") == 1 ? View.GONE : View.VISIBLE);
     }
 
     /**
