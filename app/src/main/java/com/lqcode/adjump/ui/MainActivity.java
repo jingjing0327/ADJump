@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onStart: ");
         super.onStart();
         Tools.setCacheAppsConfig();
-        Tools.getDeviceId();
+//        Tools.getDeviceId();
     }
 
     @Override

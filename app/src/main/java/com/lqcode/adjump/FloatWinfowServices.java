@@ -133,8 +133,15 @@ public class FloatWinfowServices extends Service {
         inflater = LayoutInflater.from(getApplicationContext());
         // 获取浮动窗口视图所在布局
         mFloatingLayout = inflater.inflate(R.layout.remoteview, null);
-        // 添加悬浮窗的视图
-        winManager.addView(mFloatingLayout, wmParams);
+        try {
+            // 添加悬浮窗的视图
+            winManager.addView(mFloatingLayout, wmParams);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private WindowManager.LayoutParams getParams() {
