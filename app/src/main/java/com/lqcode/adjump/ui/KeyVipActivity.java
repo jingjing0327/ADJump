@@ -55,7 +55,7 @@ public class KeyVipActivity extends BaseActivity {
                     } else {
                         XController.getInstance().toastShow(result.getMsg() + "");
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }).start();
