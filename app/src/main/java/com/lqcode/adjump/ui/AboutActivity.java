@@ -6,13 +6,14 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
 
 import com.lqcode.adjump.R;
+import com.tencent.bugly.beta.Beta;
 
 import java.util.List;
 
@@ -22,7 +23,10 @@ public class AboutActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        setTitle("关于");
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("关于");
         TextView versionTV = findViewById(R.id.version);
 
         PackageManager manager = this.getPackageManager();
@@ -34,6 +38,10 @@ public class AboutActivity extends BaseActivity {
         }
         String version = info.versionName;
         versionTV.setText("检查版本号   " + version);
+        versionTV.setOnClickListener(view -> {
+            Beta.checkUpgrade();
+            Log.d("123", "onCreate: 777777777777");
+        });
         findViewById(R.id.contact).setOnClickListener(view -> customerService());
     }
 
