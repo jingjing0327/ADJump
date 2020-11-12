@@ -103,7 +103,7 @@ public class OldUserActivity extends BaseActivity {
                         } else {
                             XController.getInstance().toastShow("无" + phone + "的任何支付信息！");
                         }
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }).start();

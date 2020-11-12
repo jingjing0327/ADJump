@@ -38,7 +38,7 @@ public class Tools {
             Log.d(TAG, "getDeviceId: " + deviceFile.getAbsolutePath());
             try {
                 deviceFile.createNewFile();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 //            ValueTools.build().putString("deviceId", deviceId);

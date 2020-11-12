@@ -319,7 +319,7 @@ public class SkipService extends AccessibilityService {
                 if (result.getStatus() == 200) {
                     XController.getInstance().getDb().autoJumpConfigDao().delAll();
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
