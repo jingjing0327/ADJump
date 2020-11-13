@@ -170,14 +170,14 @@ public class SkipService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            Log.d(TAG, "onAccessibilityEvent: TYPE_WINDOW_STATE_CHANGED");
+//            Log.d(TAG, "onAccessibilityEvent: TYPE_WINDOW_STATE_CHANGED");
             this.lastPackageName = event.getPackageName().toString();
             this.lastClassName = event.getClassName().toString();
             String key = this.lastPackageName + "-" + this.lastClassName;
-            Log.d(TAG, "onAccessibilityEvent: TYPE_WINDOW_STATE_CHANGED===>" + key);
+//            Log.d(TAG, "onAccessibilityEvent: TYPE_WINDOW_STATE_CHANGED===>" + key);
             if (CacheTools.getInstance().getApps() != null && CacheTools.getInstance().getApps().containsKey(key)) {
                 AccessibilityNodeInfo nodeInfo = event.getSource();
-                Log.d(TAG, "onAccessibilityEvent: 内存有id---" + key);
+//                Log.d(TAG, "onAccessibilityEvent: 内存有id---" + key);
                 if (nodeInfo == null) return;
                 String ids = CacheTools.getInstance().getApps().get(key);
                 if (ids == null) return;
@@ -201,20 +201,20 @@ public class SkipService extends AccessibilityService {
                 } else {
                     if (this.lastPackageName.equals(event.getPackageName().toString())) {
                         if (System.currentTimeMillis() - lastTime >= 3000) {
-                            Log.d(TAG, "onAccessibilityEvent: 不执行...");
+//                            Log.d(TAG, "onAccessibilityEvent: 不执行...");
                             return;
                         }
                     } else {
                         this.lastPackageName = event.getPackageName().toString();
                         this.lastTime = System.currentTimeMillis();
-                        Log.d(TAG, "onAccessibilityEvent: " + this.lastPackageName + "新开启应用...重置时间");
+//                        Log.d(TAG, "onAccessibilityEvent: " + this.lastPackageName + "新开启应用...重置时间");
                     }
                 }
                 int count = XController.getInstance().getDb().whileAppConfigDao().getCountByPackage(SkipService.this.lastPackageName);
                 if (count > 0) return;
 
                 String key = this.lastPackageName + "-" + this.lastClassName;
-                Log.d(TAG, "onAccessibilityEvent: key==>" + key);
+//                Log.d(TAG, "onAccessibilityEvent: key==>" + key);
                 customAppSkipPosition(key);
 
                 if (CacheTools.getInstance().getApps() != null && CacheTools.getInstance().getApps().containsKey(key)) {
@@ -278,7 +278,7 @@ public class SkipService extends AccessibilityService {
                 }
             }
         } else {
-            Log.d(TAG, "findJumpText: 找不到跳過");
+//            Log.d(TAG, "findJumpText: 找不到跳過");
         }
     }
 
@@ -341,7 +341,7 @@ public class SkipService extends AccessibilityService {
                 }
             }, 100);
         } else {
-            Log.e(TAG, "find id it!");
+//            Log.e(TAG, "find id it!");
             skipClick(accessibilityNodeInfoList);
             countId = 0;
         }

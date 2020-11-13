@@ -174,31 +174,34 @@ public class CustomActivity extends BaseActivity {
             }
         }
         if (requestCode == SCREEN_CAPTURE) {
-            mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data);
-            ImageReader imageReader = ImageReader.newInstance(CacheTools.getInstance().getWidth(), CacheTools.getInstance().getHeight(), PixelFormat.RGBA_8888, 2);
-            mediaProjection.createVirtualDisplay("screen_shot",
-                    CacheTools.getInstance().getWidth(), CacheTools.getInstance().getHeight(), dpi, DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY,
-                    imageReader.getSurface(), null, null);
+            try {
+                mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data);
+                ImageReader imageReader = ImageReader.newInstance(CacheTools.getInstance().getWidth(), CacheTools.getInstance().getHeight(), PixelFormat.RGBA_8888, 2);
+                mediaProjection.createVirtualDisplay("screen_shot",
+                        CacheTools.getInstance().getWidth(), CacheTools.getInstance().getHeight(), dpi, DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY,
+                        imageReader.getSurface(), null, null);
 
-            imageReader.setOnImageAvailableListener(reader -> {
-                image = reader.acquireNextImage();
-                final Image.Plane[] planes = image.getPlanes();
-                final ByteBuffer buffer = planes[0].getBuffer();
-                int pixelStride = planes[0].getPixelStride();
-                int rowStride = planes[0].getRowStride();
-                int rowPadding = rowStride - pixelStride * CacheTools.getInstance().getWidth();
-                bitmap = Bitmap.createBitmap(CacheTools.getInstance().getWidth() + rowPadding / pixelStride, CacheTools.getInstance().getHeight(), Bitmap.Config.ARGB_8888);
-                bitmap.copyPixelsFromBuffer(buffer);
-                image.close();
-                CacheTools.getInstance().setBitmap(bitmap);
-            }, null);
+                imageReader.setOnImageAvailableListener(reader -> {
+                    image = reader.acquireNextImage();
+                    final Image.Plane[] planes = image.getPlanes();
+                    final ByteBuffer buffer = planes[0].getBuffer();
+                    int pixelStride = planes[0].getPixelStride();
+                    int rowStride = planes[0].getRowStride();
+                    int rowPadding = rowStride - pixelStride * CacheTools.getInstance().getWidth();
+                    bitmap = Bitmap.createBitmap(CacheTools.getInstance().getWidth() + rowPadding / pixelStride, CacheTools.getInstance().getHeight(), Bitmap.Config.ARGB_8888);
+                    bitmap.copyPixelsFromBuffer(buffer);
+                    image.close();
+                    CacheTools.getInstance().setBitmap(bitmap);
+                }, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-
         Log.d("RemoteView", "重新显示了");
 //不显示悬浮框
 //        if (hasBind) {
