@@ -56,6 +56,8 @@
         <activity android:name=".ui.KeyVipActivity" />
         <activity android:name=".ui.AlipayActivity" />
         <activity android:name=".ui.WechatPayActivity" />
+        <activity android:name=".ui.MyGuideActivity"
+            android:theme="@style/AppIntroStyle"  />
 
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"

@@ -175,6 +175,58 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/setting_tv" />
 
+        <TextView
+            android:id="@+id/help_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/setting_tv"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/ripple_backgroud"
+            android:gravity="center_vertical"
+            android:padding="15dp"
+            android:text="          帮助"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:drawableRightCompat="@mipmap/back"
+            app:layout_constraintTop_toBottomOf="@+id/about_tv"
+            tools:layout_editor_absoluteX="0dp" />
+
+
+        <ImageView
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="18dp"
+            android:src="@mipmap/about"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/about_tv" />
+
+        <TextView
+            android:id="@+id/guide_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/setting_tv"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/ripple_backgroud"
+            android:gravity="center_vertical"
+            android:padding="15dp"
+            android:text="          功能介绍"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:drawableRightCompat="@mipmap/back"
+            app:layout_constraintTop_toBottomOf="@+id/help_tv"
+            tools:layout_editor_absoluteX="0dp" />
+
+
+        <ImageView
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="18dp"
+            android:src="@mipmap/about"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/help_tv" />
+
 
         <TextView
             android:id="@+id/vip_tv"
@@ -189,7 +241,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             app:drawableRightCompat="@mipmap/back"
-            app:layout_constraintTop_toBottomOf="@+id/about_tv"
+            app:layout_constraintTop_toBottomOf="@+id/guide_tv"
             tools:layout_editor_absoluteX="0dp" />
 
         <ImageView
@@ -200,7 +252,7 @@
             android:layout_marginTop="18dp"
             android:src="@mipmap/main_vip"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/about_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/guide_tv" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

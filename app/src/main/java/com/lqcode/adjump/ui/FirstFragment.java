@@ -71,6 +71,8 @@ public class FirstFragment extends Fragment {
         vipTV = rootView.findViewById(R.id.vip_tv);
         vipIV = rootView.findViewById(R.id.vip_iv);
 
+        rootView.findViewById(R.id.guide_tv).setOnClickListener(view -> startActivity(new Intent(getContext(), MyGuideActivity.class)));
+
         return rootView;
     }
 

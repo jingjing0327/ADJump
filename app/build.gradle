@@ -89,4 +89,5 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:2.3.0"
     implementation 'com.google.zxing:core:3.4.1'
     implementation 'com.king.zxing:zxing-lite:1.1.9-androidx'
+    implementation 'com.github.AppIntro:AppIntro:6.0.0'
 }
