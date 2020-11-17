@@ -18,18 +18,13 @@ public class MyGuideActivity extends AppIntro {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-//        ActionBar actionBar = getSupportActionBar();
-//        assert actionBar != null;
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setTitle("功能介绍");
-
         addSlide(AppIntroFragment.newInstance(
                 "一步-轻松跳过开屏广告",
                 "",
                 R.mipmap.guide_one,
                 Color.parseColor("#6289de")
         ));
+
         addSlide(AppIntroFragment.newInstance(
                 "一步-免ROOT一键设置",
                 "即可开启！",
@@ -39,7 +34,6 @@ public class MyGuideActivity extends AppIntro {
 
         setColorTransitionsEnabled(true);
         setTransformer(AppIntroPageTransformerType.Fade.INSTANCE);
-
 
     }
 

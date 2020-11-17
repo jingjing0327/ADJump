@@ -197,7 +197,7 @@
             android:layout_height="27dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="18dp"
-            android:src="@mipmap/about"
+            android:src="@mipmap/help"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/about_tv" />
 
@@ -219,11 +219,11 @@
 
 
         <ImageView
-            android:layout_width="27dp"
-            android:layout_height="27dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="18dp"
-            android:src="@mipmap/about"
+            android:src="@mipmap/guide"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/help_tv" />
 
