@@ -171,6 +171,7 @@ public class SkipService extends AccessibilityService {
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
 //            Log.d(TAG, "onAccessibilityEvent: TYPE_WINDOW_STATE_CHANGED");
+            if (event.getPackageName() == null) return;
             String pattern = "^com.android.*";
             if (Pattern.matches(pattern, event.getPackageName().toString())) return;
             if (event.getPackageName().toString().equals("android")) return;
@@ -194,6 +195,7 @@ public class SkipService extends AccessibilityService {
 //        }
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
             try {
+                if (event.getPackageName() == null) return;
                 String pattern = "^com.android.*";
                 if (Pattern.matches(pattern, event.getPackageName().toString())) return;
                 if (event.getPackageName().toString().equals("android")) return;

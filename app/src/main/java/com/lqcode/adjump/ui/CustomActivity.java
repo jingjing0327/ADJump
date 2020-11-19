@@ -97,6 +97,7 @@ public class CustomActivity extends BaseActivity {
 
     private void zoom(View v) {
         if (isStart) {
+            if (mediaProjection == null) return;
             mediaProjection.stop();
             unbindService(mVideoServiceConnection);
             isStart = false;
