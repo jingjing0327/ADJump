@@ -170,24 +170,28 @@ public class SkipService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            try {
 //            Log.d(TAG, "onAccessibilityEvent: TYPE_WINDOW_STATE_CHANGED");
-            if (event.getPackageName() == null) return;
-            String pattern = "^com.android.*";
-            if (Pattern.matches(pattern, event.getPackageName().toString())) return;
-            if (event.getPackageName().toString().equals("android")) return;
-            if (event.getPackageName().toString().contains("inputmethod")) return;
-            this.lastPackageName = event.getPackageName().toString();
-            this.lastClassName = event.getClassName().toString();
-            String key = this.lastPackageName + "-" + this.lastClassName;
+                if (event.getPackageName() == null) return;
+                String pattern = "^com.android.*";
+                if (Pattern.matches(pattern, event.getPackageName().toString())) return;
+                if (event.getPackageName().toString().equals("android")) return;
+                if (event.getPackageName().toString().contains("inputmethod")) return;
+                this.lastPackageName = event.getPackageName().toString();
+                this.lastClassName = event.getClassName().toString();
+                String key = this.lastPackageName + "-" + this.lastClassName;
 //            Log.d(TAG, "onAccessibilityEvent: TYPE_WINDOW_STATE_CHANGED===>" + key);
-            if (CacheTools.getInstance().getApps() != null && CacheTools.getInstance().getApps().containsKey(key)) {
-                AccessibilityNodeInfo nodeInfo = event.getSource();
+                if (CacheTools.getInstance().getApps() != null && CacheTools.getInstance().getApps().containsKey(key)) {
+                    AccessibilityNodeInfo nodeInfo = event.getSource();
 //                Log.d(TAG, "onAccessibilityEvent: 内存有id---" + key);
-                if (nodeInfo == null) return;
-                String ids = CacheTools.getInstance().getApps().get(key);
-                if (ids == null) return;
-                if (ids.length() == 0) return;
-                skip(ids, nodeInfo, this.lastClassName, this.lastPackageName);
+                    if (nodeInfo == null) return;
+                    String ids = CacheTools.getInstance().getApps().get(key);
+                    if (ids == null) return;
+                    if (ids.length() == 0) return;
+                    skip(ids, nodeInfo, this.lastClassName, this.lastPackageName);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 //        if(event.getEventType()==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED){TYPE_WINDOW_CONTENT_CHANGED

@@ -13,8 +13,8 @@ android {
         applicationId "com.lqcode.adjump"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 5
-        versionName "1.3.1"
+        versionCode 6
+        versionName "1.3.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -94,4 +94,5 @@ dependencies {
     implementation 'com.google.zxing:core:3.4.1'
     implementation 'com.king.zxing:zxing-lite:1.1.9-androidx'
     implementation 'com.github.AppIntro:AppIntro:6.0.0'
+    implementation 'com.facebook.fresco:fresco:2.3.0'
 }

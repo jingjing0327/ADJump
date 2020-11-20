@@ -2,6 +2,7 @@ package com.lqcode.adjump.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.lqcode.adjump.R;
 import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.tools.ValueTools;
@@ -107,9 +109,11 @@ public class SettingActivity extends BaseActivity {
         List<PackageInfo> temp = pm.getInstalledPackages(0);
         List<PackageInfo> tempRemove = new ArrayList<>();
         for (PackageInfo packageInfo : temp) {
-            if (packageInfo.packageName.contains("com.android.")) {
+            if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) > 0) {
                 tempRemove.add(packageInfo);
             }
+//            if (packageInfo.packageName.contains("com.android.")) {
+//            }
         }
         temp.removeAll(tempRemove);
         installedPackages.addAll(temp);
@@ -157,7 +161,7 @@ public class SettingActivity extends BaseActivity {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            ImageView appIcon;
+            SimpleDraweeView appIcon;
             TextView appName;
             TextView appInfo;
 
