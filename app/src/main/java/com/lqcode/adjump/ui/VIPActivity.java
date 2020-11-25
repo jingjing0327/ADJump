@@ -9,7 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.lqcode.adjump.R;
+import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.tools.ValueTools;
 
 
@@ -46,6 +48,8 @@ public class VIPActivity extends BaseActivity {
             ValueTools.build().putInt("weixin_auto_login_switch", 0);
             vipState();
         });
+        SimpleDraweeView simpleDraweeView = findViewById(R.id.imageView3);
+        simpleDraweeView.setImageURI(CacheTools.getInstance().getSundryConfig().get("qrcode"));
     }
 
 

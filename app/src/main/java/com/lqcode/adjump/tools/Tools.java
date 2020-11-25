@@ -6,6 +6,7 @@ import android.widget.EditText;
 
 import com.lqcode.adjump.entity.Result;
 import com.lqcode.adjump.entity.db.DBAppConfig;
+import com.lqcode.adjump.entity.db.DBSundryConfig;
 import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
 import com.lqcode.adjump.frame.net.ApiController;
@@ -65,6 +66,25 @@ public class Tools {
         }).start();
     }
 
+    public static void setCacheSundryAppsConfig() {
+        new Thread(() -> {
+            List<DBSundryConfig> dbAppConfigList = XController.getInstance().getDb().sundryConfigDao().getAll();
+            if (dbAppConfigList.size() <= 0) {
+                getSundryConfig();
+                return;
+            }
+            if (dbAppConfigList.size() == CacheTools.getInstance().getSundryConfig().size())
+                return;
+            Map<String, String> map = new HashMap<>();
+            for (DBSundryConfig config : dbAppConfigList) {
+                map.put(config.getKey(), config.getValues());
+            }
+            CacheTools.getInstance().setSundryConfig(map);
+            Log.d(TAG, "setSundryConfig: " + CacheTools.getInstance().getSundryConfig().toString());
+            getSundryConfig();
+        }).start();
+    }
+
     /**
      * 获取网络新的配置
      */
@@ -97,7 +117,41 @@ public class Tools {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    /**
+     *
+     */
+    public static void getSundryConfig() {
+        try {
+            Call<Result<String>> md5Call = ApiController.getService().sundryMd5();
+            retrofit2.Response<Result<String>> resultResponse = md5Call.execute();
+            Result<String> md5Result = resultResponse.body();
+            if (md5Result == null) return;
+            String md5 = ValueTools.build().getString("sundryMd5");
+            if (CacheTools.getInstance().getSundryConfig().size() <= 0)
+                md5 = UUID.randomUUID().toString();
+            if (md5 != null) if (md5.equals(md5Result.getData())) return;
+
+            Call<Result<Map<String, String>>> appConfigCall = ApiController.getService().getSundryConfig();
+            retrofit2.Response<Result<Map<String, String>>> resultAppConfig = appConfigCall.execute();
+            Result<Map<String, String>> appConfigResult = resultAppConfig.body();
+
+            if (appConfigResult == null) return;
+            XController.getInstance().getDb().sundryConfigDao().delAll();
+            for (String key : appConfigResult.getData().keySet()) {
+                String value = appConfigResult.getData().get(key);
+                DBSundryConfig appConfig = new DBSundryConfig();
+                appConfig.setValues(value);
+                appConfig.setKey(key);
+                XController.getInstance().getDb().sundryConfigDao().addAppConfig(appConfig);
+            }
+            Log.d(TAG, "getSundryConfig: " + XController.getInstance().getDb().sundryConfigDao().getAll());
+            CacheTools.getInstance().setSundryConfig(appConfigResult.getData());
+            ValueTools.build().putString("sundryMd5", md5Result.getData().toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

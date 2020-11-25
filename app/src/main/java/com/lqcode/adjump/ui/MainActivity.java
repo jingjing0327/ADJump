@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onStart: ");
         super.onStart();
         Tools.setCacheAppsConfig();
+        Tools.setCacheSundryAppsConfig();
 //        Tools.getDeviceId();
     }
 

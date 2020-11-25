@@ -30,13 +30,13 @@ public class FirstFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (ValueTools.build().getInt("vip") == 1) {
-            vipTV.setVisibility(View.VISIBLE);
-            vipIV.setVisibility(View.VISIBLE);
-        } else {
-            vipTV.setVisibility(View.GONE);
-            vipIV.setVisibility(View.GONE);
-        }
+//        if (ValueTools.build().getInt("vip") == 1) {
+//            vipTV.setVisibility(View.VISIBLE);
+//            vipIV.setVisibility(View.VISIBLE);
+//        } else {
+//            vipTV.setVisibility(View.GONE);
+//            vipIV.setVisibility(View.GONE);
+//        }
     }
 
     @Override

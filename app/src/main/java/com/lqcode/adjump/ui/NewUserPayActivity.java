@@ -2,16 +2,19 @@ package com.lqcode.adjump.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.room.util.StringUtil;
 
 import com.lqcode.adjump.R;
 import com.lqcode.adjump.entity.PayEntity;
 import com.lqcode.adjump.entity.Result;
+import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
 import com.lqcode.adjump.frame.net.ApiController;
 import com.lqcode.adjump.tools.Tools;
@@ -48,7 +51,9 @@ public class NewUserPayActivity extends BaseActivity {
 
         findViewById(R.id.weixin_layout).setOnClickListener(view -> radioGroup.check(R.id.weixin));
 
-        findViewById(R.id.now_pay).setOnClickListener(view -> {
+        Button nowPay = findViewById(R.id.now_pay);
+
+        nowPay.setOnClickListener(view -> {
             if (onePhone.getText().length() <= 0) {
                 onePhone.setError("不能为空");
                 Tools.editFocus(onePhone);
@@ -79,6 +84,9 @@ public class NewUserPayActivity extends BaseActivity {
                 getPayInfo();
             }
         });
+        String price = CacheTools.getInstance().getSundryConfig().get("price");
+        if (price != null && price.length() > 0)
+            nowPay.setText(price);
     }
 
 

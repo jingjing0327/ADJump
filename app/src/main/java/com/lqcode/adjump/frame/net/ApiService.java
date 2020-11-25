@@ -16,8 +16,14 @@ public interface ApiService {
     @GET("autoSkip/md5")
     Call<Result<String>> getMd5();
 
+    @GET("autoSkip/sundryMd5")
+    Call<Result<String>> sundryMd5();
+
     @GET("autoSkip/get")
     Call<Result<Map<String, String>>> getAppConfig();
+
+    @GET("autoSkip/getSundryConfig")
+    Call<Result<Map<String, String>>> getSundryConfig();
 
     @GET("pay/native/{phone}/{type}")
     Call<Result<PayEntity>> payInfo(@Path("phone") String phone, @Path("type") String type);

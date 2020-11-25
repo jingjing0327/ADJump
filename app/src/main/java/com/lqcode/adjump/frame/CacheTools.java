@@ -23,7 +23,8 @@ public class CacheTools {
     private int width;
     private int height;
     private boolean isStartScreen;
-    private Map<String, String> apps=new HashMap<>();
+    private Map<String, String> apps = new HashMap<>();
+    private Map<String, String> sundryConfig = new HashMap<>();
     private Context context;
     private OkHttpClient client;
 
@@ -52,6 +53,15 @@ public class CacheTools {
     public void setApps(Map<String, String> apps) {
         this.apps.clear();
         this.apps.putAll(apps);
+    }
+
+    public Map<String, String> getSundryConfig() {
+        return sundryConfig;
+    }
+
+    public void setSundryConfig(Map<String, String> sundryConfig) {
+        this.sundryConfig.clear();
+        this.sundryConfig.putAll(sundryConfig);
     }
 
     public boolean isStartScreen() {

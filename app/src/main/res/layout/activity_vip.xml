@@ -61,16 +61,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vip_user_btn" />
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/imageView3"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginTop="68dp"
-        android:src="@mipmap/qrcode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vip_login_out" />
+        app:layout_constraintTop_toBottomOf="@+id/vip_login_out"
+        app:placeholderImage="@mipmap/qrcode" />
 
     <TextView
         android:id="@+id/textView6"

@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiController {
     static Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://api.lqcode.cn/")
-//            .baseUrl("http://192.168.1.102:8082/")
+//            .baseUrl("http://192.168.1.161:8083/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
