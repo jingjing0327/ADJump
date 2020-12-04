@@ -180,7 +180,7 @@ public class SkipService extends AccessibilityService {
                 this.lastPackageName = event.getPackageName().toString();
                 this.lastClassName = event.getClassName().toString();
                 String key = this.lastPackageName + "-" + this.lastClassName;
-//            Log.d(TAG, "onAccessibilityEvent: TYPE_WINDOW_STATE_CHANGED===>" + key);
+                Log.d(TAG, "onAccessibilityEvent: TYPE_WINDOW_STATE_CHANGED===>" + key);
                 if (CacheTools.getInstance().getApps() != null && CacheTools.getInstance().getApps().containsKey(key)) {
                     AccessibilityNodeInfo nodeInfo = event.getSource();
 //                Log.d(TAG, "onAccessibilityEvent: 内存有id---" + key);
