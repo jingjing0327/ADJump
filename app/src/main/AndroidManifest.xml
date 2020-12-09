@@ -31,7 +31,7 @@
             android:name=".ui.SkipService"
             android:enabled="true"
             android:exported="true"
-            android:label="❤一步跳过广告❤"
+            android:label="@string/app_name_label"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:persistent="true">
             <intent-filter>
@@ -57,8 +57,9 @@
         <activity android:name=".ui.AlipayActivity" />
         <activity android:name=".ui.WechatPayActivity" />
         <activity android:name=".ui.HelpActivity" />
-        <activity android:name=".ui.MyGuideActivity"
-            android:theme="@style/AppIntroStyle"  />
+        <activity
+            android:name=".ui.MyGuideActivity"
+            android:theme="@style/AppIntroStyle" />
 
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"

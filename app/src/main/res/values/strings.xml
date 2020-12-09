@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">快开启</string>
-    <string name="app_name_info">快开启跳过广告</string>
+    <string name="app_name">快开始</string>
+    <string name="app_name_info">快开始跳过广告</string>
+    <string name="app_name_label">❤快开始-跳过广告❤</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
