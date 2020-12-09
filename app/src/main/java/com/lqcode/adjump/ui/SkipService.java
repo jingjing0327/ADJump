@@ -23,14 +23,12 @@ import com.lqcode.adjump.event.LayoutMessage;
 import com.lqcode.adjump.event.RemoveLayoutMessage;
 import com.lqcode.adjump.frame.CacheTools;
 import com.lqcode.adjump.frame.XController;
-import com.lqcode.adjump.tools.Tools;
 import com.lqcode.adjump.tools.ValueTools;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;

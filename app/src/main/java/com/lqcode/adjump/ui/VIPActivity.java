@@ -49,7 +49,7 @@ public class VIPActivity extends BaseActivity {
             vipState();
         });
         SimpleDraweeView simpleDraweeView = findViewById(R.id.imageView3);
-        simpleDraweeView.setImageURI(CacheTools.getInstance().getSundryConfig().get("qrcode"));
+        simpleDraweeView.setImageURI(CacheTools.getInstance().getSundryConfig().get("qrcode_002"));
     }
 
 
