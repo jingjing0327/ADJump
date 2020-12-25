@@ -90,6 +90,8 @@ public class OldUserActivity extends BaseActivity {
                     Tools.editFocus(phoneNumber);
                     return;
                 }
+                sendMSM.setBackgroundColor(Color.parseColor("#C6C6C6"));
+                sendMSM.setText("请求中...");
                 new Thread(() -> {
                     try {
                         Call<Result<Object>> judgeVIPCall = ApiController.getService().judgeVIP(phone);

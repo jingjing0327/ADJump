@@ -110,7 +110,8 @@ public class NewUserPayActivity extends BaseActivity {
                     else
                         intent = new Intent(NewUserPayActivity.this, WechatPayActivity.class);
                     intent.putExtra("url", codeUrl);
-                    startActivity(intent);
+                    intent.putExtra("phone", phone);
+                    startActivityForResult(intent, 200);
                 } else {
                     XController.getInstance().toastShow(result.getMsg());
                 }
@@ -118,5 +119,14 @@ public class NewUserPayActivity extends BaseActivity {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == 0x00327) {
+            NewUserPayActivity.this.finish();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 }
