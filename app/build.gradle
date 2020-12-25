@@ -10,11 +10,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.lqcode.adjump.second"
+        applicationId "com.lqcode.adjump"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 8
-        versionName "2.0"
+        versionCode 9
+        versionName "2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
